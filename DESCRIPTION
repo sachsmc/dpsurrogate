@@ -14,4 +14,10 @@ Depends:
   rstanarm,
   rjags,
   mvtnorm,
-  dirichletprocess
+  dirichletprocess,
+  splines
+RoxygenNote: 7.1.1
+Suggests: 
+    rmarkdown,
+    knitr
+VignetteBuilder: knitr

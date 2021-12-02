@@ -5,14 +5,14 @@ library(ggplot2)
 idat <- generate_data()
 
 resall <- run_one_analysis(idat)
-resnull <- run_one_null(idat, niter = 10)
+#resnull <- run_one_null(idat, niter = 10)
 
-# plot(idat$rdat$yeff ~ idat$rdat$seff)
+plot(idat$rdat$yeff ~ idat$rdat$seff)
 
 #coo1 <- rep(1, 64)
 #coo1[lout] <- 2
 #points(colMeans(res.y) ~ colMeans(res.s), pch = 20, col = coo1)
-# points(colMeans(resnull$res.y) ~ colMeans(resall$res.s), pch = 20, col = "blue")
+ points(colMeans(resall$res.y) ~ colMeans(resall$res.s), pch = 20, col = "blue")
 #
 # mean((colMeans(resall$res.y) - idat$rdat$yeff)^2)
 # mean((colMeans(resnull$res.y) - idat$rdat$yeff)^2)

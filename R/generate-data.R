@@ -1,8 +1,9 @@
 #' Generate trial and individual-level data
 #' @export
+#' @param effect String indicating relationship between seff and yeff, can be "nonlinear", "linear", "null"
 
 
-generate_data <- function() {
+generate_data <- function(effect = "nonlinear", Zeffect = FALSE, Ueffect = FALSE) {
   ln_cr <-
     list(
       X = 5L,
@@ -244,10 +245,30 @@ generate_data <- function() {
 
   input <- gen_input("cr", ln_cr, subtypes_cr, signatures_cr, return_to_env = FALSE)
 
-  trtZ <- rnorm(64)
-  seff <- trtZ + rnorm(64, sd = .1) #seq(-2, 2, length.out = 64)
-  yeff <- -1 + 1.1 * trtZ + .15 * seff + .75 * cos(seff * 2.5)
 
+  trtZ <- rnorm(64)
+  seff <- rnorm(64, sd = 1)
+
+  UU <- rnorm(64)
+
+  if(Zeffect) Zeff <- .25 else Zeff <- 0
+  if(Ueffect) Ueff <- .25 else Ueff <- 0
+
+  if(effect == "nonlinear") {
+
+    sbeff <- bs(seff, knots = c(-1, 0, 1), degree = 1, Boundary.knots = c(-4, 4))
+    yeff <- -1 + sbeff %*% c(0, .6, 3, 5) +
+      + Zeff * trtZ + Ueff * UU
+
+  } else if(effect == "linear") {
+
+    yeff <- -1 + seff * 1 + Zeff * trtZ + Ueff * UU
+
+  } else if(effect == "null") {
+
+    yeff <- 0 + Zeff * trtZ + Ueff * UU
+
+  }
 
   # treatment effects
   ri_gx <- matrix(
