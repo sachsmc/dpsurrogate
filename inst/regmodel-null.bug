@@ -1,0 +1,24 @@
+var beta_y[J], prior_tau[J];
+
+model {
+
+
+  for(i in 1:J) {
+
+    prior_tau[i] <- pow(prior_sig[i], -2)
+    beta_y[i] ~ dnorm(prior_mu[i], prior_tau[i])
+
+  }
+
+  mu_y <- X %*% beta_y
+
+  for(i in 1:N){
+
+    y[i] ~ dnorm(mu_y[i], tau_y)
+
+  }
+
+  tau_y <- pow(sigma_y, -2)
+  sigma_y ~ dgamma(1, 1)
+
+}
