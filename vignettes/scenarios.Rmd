@@ -16,6 +16,25 @@ knitr::opts_chunk$set(
 
 ```{r setup, message = FALSE, warning = FALSE}
 library(dpsurrogate)
+library(splines)
+
+summary_scenario <- function(idat) {
+  par(mfrow = c(2, 2))
+  plot(yeff ~ seff, data = idat$rdat)
+  plot(yeff ~ trtZ, data = idat$rdat)
+  
+  ## partial residuals
+  
+  fit.z <- lm(yeff ~ bs(trtZ, df = 3), data = idat$rdat)
+  fit.s <- lm(yeff ~ bs(seff, df = 3), data = idat$rdat)
+  
+  plot(resid(fit.z) ~ idat$rdat$seff, ylab = "p resid | Z", xlab = "seff")
+  plot(resid(fit.s) ~ idat$rdat$trtZ, ylab = "p resid | seff", xlab = "trtZ")
+  
+  summary(lm(yeff ~ seff + trtZ, data = idat$rdat))
+  
+}
+
 ```
 
 We start by generating $\nu_j, Z_j, U_j$ for $j = 1, \ldots, 64$ all from independent standard normal distributions. Recall that $\nu_j$ represents the treatment effect on the potential surrogate in group $i$, and $Z_j$ is an observed treatment-level covariate, and $U_i$ is an unobserved treatment-level covariate. We consider the following scenarios for generation of $\mu_j$, the treatment effect on the clinical outcome. 
@@ -31,10 +50,7 @@ When $\gamma_1 = \gamma_2 = 0$, we have the following relationship:
 
 ```{r nonlin00}
 idat <- generate_data(effect = "nonlinear", Zeffect = FALSE, Ueffect = FALSE)
-par(mfrow = c(1, 2))
-plot(yeff ~ seff, data = idat$rdat)
-plot(yeff ~ trtZ, data = idat$rdat)
-summary(lm(yeff ~ seff + trtZ, data = idat$rdat))
+summary_scenario(idat)
 ```
 
 
@@ -42,10 +58,7 @@ When $\gamma_1 = 0.25, \gamma_2 = 0$, we have the following relationship:
 
 ```{r nonlin10}
 idat <- generate_data(effect = "nonlinear", Zeffect = TRUE, Ueffect = FALSE)
-par(mfrow = c(1, 2))
-plot(yeff ~ seff, data = idat$rdat)
-plot(yeff ~ trtZ, data = idat$rdat)
-summary(lm(yeff ~ seff + trtZ, data = idat$rdat))
+summary_scenario(idat)
 ```
 
 
@@ -53,10 +66,7 @@ When $\gamma_1 = 0, \gamma_2 = 0.25$, we have the following relationship:
 
 ```{r nonlin01}
 idat <- generate_data(effect = "nonlinear", Zeffect = FALSE, Ueffect = TRUE)
-par(mfrow = c(1, 2))
-plot(yeff ~ seff, data = idat$rdat)
-plot(yeff ~ trtZ, data = idat$rdat)
-summary(lm(yeff ~ seff + trtZ, data = idat$rdat))
+summary_scenario(idat)
 ```
 
 
@@ -65,10 +75,7 @@ When $\gamma_1 = \gamma_2 = 0.25$, we have the following relationship:
 
 ```{r nonlin11}
 idat <- generate_data(effect = "nonlinear", Zeffect = TRUE, Ueffect = TRUE)
-par(mfrow = c(1, 2))
-plot(yeff ~ seff, data = idat$rdat)
-plot(yeff ~ trtZ, data = idat$rdat)
-summary(lm(yeff ~ seff + trtZ, data = idat$rdat))
+summary_scenario(idat)
 ```
 
 
@@ -82,10 +89,7 @@ When $\gamma_1 = \gamma_2 = 0$, we have the following relationship:
 
 ```{r lin00}
 idat <- generate_data(effect = "linear", Zeffect = FALSE, Ueffect = FALSE)
-par(mfrow = c(1, 2))
-plot(yeff ~ seff, data = idat$rdat)
-plot(yeff ~ trtZ, data = idat$rdat)
-summary(lm(yeff ~ seff + trtZ, data = idat$rdat))
+summary_scenario(idat)
 ```
 
 
@@ -93,10 +97,7 @@ When $\gamma_1 = 0.25, \gamma_2 = 0$, we have the following relationship:
 
 ```{r lin10}
 idat <- generate_data(effect = "linear", Zeffect = TRUE, Ueffect = FALSE)
-par(mfrow = c(1, 2))
-plot(yeff ~ seff, data = idat$rdat)
-plot(yeff ~ trtZ, data = idat$rdat)
-summary(lm(yeff ~ seff + trtZ, data = idat$rdat))
+summary_scenario(idat)
 ```
 
 
@@ -104,10 +105,7 @@ When $\gamma_1 = 0, \gamma_2 = 0.25$, we have the following relationship:
 
 ```{r lin01}
 idat <- generate_data(effect = "linear", Zeffect = FALSE, Ueffect = TRUE)
-par(mfrow = c(1, 2))
-plot(yeff ~ seff, data = idat$rdat)
-plot(yeff ~ trtZ, data = idat$rdat)
-summary(lm(yeff ~ seff + trtZ, data = idat$rdat))
+summary_scenario(idat)
 ```
 
 
@@ -116,10 +114,7 @@ When $\gamma_1 = \gamma_2 = 0.25$, we have the following relationship:
 
 ```{r lin11}
 idat <- generate_data(effect = "linear", Zeffect = TRUE, Ueffect = TRUE)
-par(mfrow = c(1, 2))
-plot(yeff ~ seff, data = idat$rdat)
-plot(yeff ~ trtZ, data = idat$rdat)
-summary(lm(yeff ~ seff + trtZ, data = idat$rdat))
+summary_scenario(idat)
 ```
 
 ## Null
@@ -131,10 +126,7 @@ When $\gamma_1 = \gamma_2 = 0$, we have the following relationship:
 
 ```{r null00}
 idat <- generate_data(effect = "null", Zeffect = FALSE, Ueffect = FALSE)
-par(mfrow = c(1, 2))
-plot(yeff ~ seff, data = idat$rdat)
-plot(yeff ~ trtZ, data = idat$rdat)
-summary(lm(yeff ~ seff + trtZ, data = idat$rdat))
+summary_scenario(idat)
 ```
 
 
@@ -142,10 +134,7 @@ When $\gamma_1 = 0.25, \gamma_2 = 0$, we have the following relationship:
 
 ```{r null10}
 idat <- generate_data(effect = "null", Zeffect = TRUE, Ueffect = FALSE)
-par(mfrow = c(1, 2))
-plot(yeff ~ seff, data = idat$rdat)
-plot(yeff ~ trtZ, data = idat$rdat)
-summary(lm(yeff ~ seff + trtZ, data = idat$rdat))
+summary_scenario(idat)
 ```
 
 
@@ -153,10 +142,7 @@ When $\gamma_1 = 0, \gamma_2 = 0.25$, we have the following relationship:
 
 ```{r null01}
 idat <- generate_data(effect = "null", Zeffect = FALSE, Ueffect = TRUE)
-par(mfrow = c(1, 2))
-plot(yeff ~ seff, data = idat$rdat)
-plot(yeff ~ trtZ, data = idat$rdat)
-summary(lm(yeff ~ seff + trtZ, data = idat$rdat))
+summary_scenario(idat)
 ```
 
 
@@ -165,8 +151,5 @@ When $\gamma_1 = \gamma_2 = 0.25$, we have the following relationship:
 
 ```{r null11}
 idat <- generate_data(effect = "null", Zeffect = TRUE, Ueffect = TRUE)
-par(mfrow = c(1, 2))
-plot(yeff ~ seff, data = idat$rdat)
-plot(yeff ~ trtZ, data = idat$rdat)
-summary(lm(yeff ~ seff + trtZ, data = idat$rdat))
+summary_scenario(idat)
 ```

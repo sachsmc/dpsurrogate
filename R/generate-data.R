@@ -258,15 +258,15 @@ generate_data <- function(effect = "nonlinear", Zeffect = FALSE, Ueffect = FALSE
 
     sbeff <- bs(seff, knots = c(-1, 0, 1), degree = 1, Boundary.knots = c(-4, 4))
     yeff <- -1 + sbeff %*% c(0, .6, 3, 5) +
-      + Zeff * trtZ + Ueff * UU
+      + Zeff * abs(trtZ) + Ueff * UU
 
   } else if(effect == "linear") {
 
-    yeff <- -1 + seff * 1 + Zeff * trtZ + Ueff * UU
+    yeff <- -1 + seff * 1 + Zeff * abs(trtZ) + Ueff * UU
 
   } else if(effect == "null") {
 
-    yeff <- 0 + Zeff * trtZ + Ueff * UU
+    yeff <- 0 + Zeff * abs(trtZ) + Ueff * UU
 
   }
 
