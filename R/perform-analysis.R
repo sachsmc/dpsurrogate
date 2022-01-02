@@ -7,9 +7,12 @@ initialize_mus <- function(ldat, subtypes, lout = NULL) {
   init <- NULL
   for(j in subtypes) {
 
-    no.pool <- stan_glm(ctDNA_fu ~ trt, data = subset(ldat, J == j),
-                        family = gaussian, seed = 20201105,
-                        chains = 1, iter = 2000, refresh = 0)
+    # no.pool <- stan_glm(ctDNA_fu ~ trt, data = subset(ldat, J == j),
+    #                     family = gaussian, seed = 20201105,
+    #                     chains = 1, iter = 2000, refresh = 0)
+
+    no.pool <- glm(ctDNA_fu ~ trt, data = subset(ldat, J == j),
+                        family = gaussian)
 
     if(!is.null(lout) && j == subtypes[lout]) {
 
@@ -17,9 +20,12 @@ initialize_mus <- function(ldat, subtypes, lout = NULL) {
 
     } else {
 
-      no.pool2 <- stan_glm(log(time) ~ trt, data = subset(ldat, J == j),
-                           family = gaussian, seed = 20201105,
-                           chains = 1, iter = 2000, refresh = 0)
+      # no.pool2 <- stan_glm(log(time) ~ trt, data = subset(ldat, J == j),
+      #                      family = gaussian, seed = 20201105,
+      #                      chains = 1, iter = 2000, refresh = 0)
+
+      no.pool2 <- glm(log(time) ~ trt, data = subset(ldat, J == j),
+                           family = gaussian)
 
       init <- rbind(init, data.frame(seff = coef(no.pool)[-1], yeff = coef(no.pool2)[-1], J = j))
     }
@@ -104,7 +110,7 @@ run_one_analysis <- function(boo, niter = 50) {
 
   dmat <- cbind(as.matrix(cur[, c("seff", "yeff")]), boo$rdat$trtZ)
   dp <- DirichletProcessMvnormal(dmat, alphaPriors = c(2, 4), numInitialClusters = length(initclus$size))
-  dp <- Fit(dp, 200)
+  dp <- Fit(dp, 200, progressBar = FALSE)
   dp <- UpdateAlpha(dp)
 
   #niter <- 50
@@ -139,6 +145,7 @@ run_one_analysis <- function(boo, niter = 50) {
     } else {
 
       tmod <- jags.model(system.file("regmodel.bug", package = "dpsurrogate"), test_data, inits = tmod$state(), n.adapt = 0, quiet = TRUE)
+      tmp <- adapt(tmod, n.iter = 0, end.adaptation = TRUE)
       tsam <- jags.samples(tmod, c("beta_s", "beta_y"), n.iter = 10)
 
 
@@ -154,10 +161,16 @@ run_one_analysis <- function(boo, niter = 50) {
                                yeff = res.y[j, ]))
     dmatin <- cbind(newdmat, boo$rdat$trtZ)
     dp <- ChangeObservations(dp, dmatin)
-    dp <- Fit(dp, 50, progressBar = FALSE)
+    dpTry <- tryCatch(Fit(dp, 50, progressBar = FALSE),
+                      error = function(e) "singular")
+    if(identical(dpTry, "singular")) {
+      next
+    } else {
+      dp <- dpTry
+    }
     dp <- UpdateAlpha(dp)
 
-    cat(j, "\n")
+    #cat(j, "\n")
   }
 
   list(res.s = res.s, res.y = res.y)
@@ -193,7 +206,7 @@ run_one_loo <- function(boo, lout, niter = 50) {
 
   dmat <- cbind(as.matrix(cur[, c("seff", "yeff")]), boo$rdat$trtZ)
   dp <- DirichletProcessMvnormal(dmat, alphaPriors = c(2, 4), numInitialClusters = length(initclus$size))
-  dp <- Fit(dp, 200)
+  dp <- Fit(dp, 200, progressBar = FALSE)
   dp <- UpdateAlpha(dp)
 
   #niter <- 50
@@ -228,6 +241,7 @@ run_one_loo <- function(boo, lout, niter = 50) {
     } else {
 
       tmod <- jags.model(system.file("regmodel.bug", package = "dpsurrogate"), test_data, inits = tmod$state(), n.adapt = 0, quiet = TRUE)
+      tmp <- adapt(tmod, n.iter = 0, end.adaptation = TRUE)
       tsam <- jags.samples(tmod, c("beta_s", "beta_y"), n.iter = 10)
 
 
@@ -254,7 +268,15 @@ run_one_loo <- function(boo, lout, niter = 50) {
                                yeff = res.y[j, ]))
     dmatin <- cbind(newdmat, boo$rdat$trtZ)
     dp <- ChangeObservations(dp, dmatin)
-    dp <- Fit(dp, 40, progressBar = FALSE)
+
+    dpTry <- tryCatch(Fit(dp, 40, progressBar = FALSE),
+                      error = function(e) "singular")
+    if(identical(dpTry, "singular")) {
+      next
+    } else {
+      dp <- dpTry
+    }
+
     dp <- UpdateAlpha(dp)
 
     #cat(j, "\n")
@@ -290,7 +312,7 @@ run_one_null <- function(boo, niter = 50) {
 
   dmat <- cbind(as.matrix(cur[, c("yeff")]), boo$rdat$trtZ)
   dp <- DirichletProcessMvnormal(dmat, alphaPriors = c(2, 4), numInitialClusters = length(initclus$size))
-  dp <- Fit(dp, 200)
+  dp <- Fit(dp, 200, progressBar = FALSE)
   dp <- UpdateAlpha(dp)
 
   #niter <- 50
@@ -321,6 +343,7 @@ run_one_null <- function(boo, niter = 50) {
     } else {
 
       tmod <- jags.model(system.file("regmodel-null.bug", package = "dpsurrogate"), test_data, inits = tmod$state(), n.adapt = 0, quiet = TRUE)
+      tmp <- adapt(tmod, n.iter = 0, end.adaptation = TRUE)
       tsam <- jags.samples(tmod, c("beta_y"), n.iter = 10)
 
 
@@ -335,7 +358,13 @@ run_one_null <- function(boo, niter = 50) {
     newdmat <- as.matrix(cbind(yeff = res.y[j, ]))
     dmatin <- cbind(newdmat, boo$rdat$trtZ)
     dp <- ChangeObservations(dp, dmatin)
-    dp <- Fit(dp, 50, progressBar = FALSE)
+    dpTry <- tryCatch(Fit(dp, 50, progressBar = FALSE),
+                      error = function(e) "singular")
+    if(identical(dpTry, "singular")) {
+      next
+    } else {
+      dp <- dpTry
+    }
     dp <- UpdateAlpha(dp)
 
     #cat(j, "\n")
@@ -373,7 +402,7 @@ run_one_loo_null <- function(boo, lout, niter = 50) {
 
   dmat <- cbind(as.matrix(cur[, c("yeff")]), boo$rdat$trtZ)
   dp <- DirichletProcessMvnormal(dmat, alphaPriors = c(2, 4), numInitialClusters = length(initclus$size))
-  dp <- Fit(dp, 200)
+  dp <- Fit(dp, 200, progressBar = FALSE)
   dp <- UpdateAlpha(dp)
 
   #niter <- 50
@@ -389,7 +418,7 @@ run_one_loo_null <- function(boo, lout, niter = 50) {
     test_data <- list(J = ncol(Xmat),
                       N = nrow(Xmat),
                       y = logYY,
-                      s = SS,
+                #      s = SS,
                       X = Xmat,
                       prior_mu = prior.mu,
                       prior_sig = prior.sig)
@@ -402,6 +431,7 @@ run_one_loo_null <- function(boo, lout, niter = 50) {
     } else {
 
       tmod <- jags.model(system.file("regmodel-null.bug", package = "dpsurrogate"), test_data, inits = tmod$state(), n.adapt = 0, quiet = TRUE)
+      tmp <- adapt(tmod, n.iter = 0, end.adaptation = TRUE)
       tsam <- jags.samples(tmod, c("beta_y"), n.iter = 10)
 
 
@@ -415,7 +445,13 @@ run_one_loo_null <- function(boo, lout, niter = 50) {
       yeff = res.y[j, ]))
     dmatin <- cbind(newdmat, boo$rdat$trtZ)
     dp <- ChangeObservations(dp, dmatin)
-    dp <- Fit(dp, 40, progressBar = FALSE)
+    dpTry <- tryCatch(Fit(dp, 50, progressBar = FALSE),
+                      error = function(e) "singular")
+    if(identical(dpTry, "singular")) {
+      next
+    } else {
+      dp <- dpTry
+    }
     dp <- UpdateAlpha(dp)
 
     #cat(j, "\n")

@@ -14,8 +14,6 @@ run_one_simple_analysis <- function(boo, niter = 50) {
   logYY <- log(ldat$time)
   SS <- ldat$ctDNA_fu
 
-  dmat <- cbind(as.matrix(cur[, c("seff", "yeff")]), boo$rdat$trtZ)
-
   res.s <- res.y <- matrix(NA, nrow = niter, ncol = 64)
 
     Sig <- matrix(.05, nrow = 3, ncol = 3)
@@ -68,8 +66,6 @@ run_one_loo_simple_analysis <- function(boo, lout, niter = 50) {
   Xmat <- model.matrix( ~ subtype + subtype:trt:trttype -1, data = ldat)
   logYY <- log(ldat$time)
   SS <- ldat$ctDNA_fu
-
-  dmat <- cbind(as.matrix(cur[, c("seff", "yeff")]), boo$rdat$trtZ)
 
   res.s <- res.y <- rep(NA, 64)
 

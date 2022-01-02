@@ -1,0 +1,562 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\title{Summary of data generation scenarios}
+\author{}
+\date{\vspace{-2.5em}}
+
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Summary of data generation scenarios},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(dpsurrogate)}
+\FunctionTok{library}\NormalTok{(splines)}
+
+\NormalTok{summary\_scenario }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(idat) \{}
+  \FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{))}
+  \FunctionTok{plot}\NormalTok{(yeff }\SpecialCharTok{\textasciitilde{}}\NormalTok{ seff, }\AttributeTok{data =}\NormalTok{ idat}\SpecialCharTok{$}\NormalTok{rdat)}
+  \FunctionTok{plot}\NormalTok{(yeff }\SpecialCharTok{\textasciitilde{}}\NormalTok{ trtZ, }\AttributeTok{data =}\NormalTok{ idat}\SpecialCharTok{$}\NormalTok{rdat)}
+  
+  \DocumentationTok{\#\# partial residuals}
+  
+\NormalTok{  fit.z }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(yeff }\SpecialCharTok{\textasciitilde{}} \FunctionTok{bs}\NormalTok{(trtZ, }\AttributeTok{df =} \DecValTok{3}\NormalTok{), }\AttributeTok{data =}\NormalTok{ idat}\SpecialCharTok{$}\NormalTok{rdat)}
+\NormalTok{  fit.s }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(yeff }\SpecialCharTok{\textasciitilde{}} \FunctionTok{bs}\NormalTok{(seff, }\AttributeTok{df =} \DecValTok{3}\NormalTok{), }\AttributeTok{data =}\NormalTok{ idat}\SpecialCharTok{$}\NormalTok{rdat)}
+  
+  \FunctionTok{plot}\NormalTok{(}\FunctionTok{resid}\NormalTok{(fit.z) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ idat}\SpecialCharTok{$}\NormalTok{rdat}\SpecialCharTok{$}\NormalTok{seff, }\AttributeTok{ylab =} \StringTok{"p resid | Z"}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"seff"}\NormalTok{)}
+  \FunctionTok{plot}\NormalTok{(}\FunctionTok{resid}\NormalTok{(fit.s) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ idat}\SpecialCharTok{$}\NormalTok{rdat}\SpecialCharTok{$}\NormalTok{trtZ, }\AttributeTok{ylab =} \StringTok{"p resid | seff"}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"trtZ"}\NormalTok{)}
+  
+  \FunctionTok{summary}\NormalTok{(}\FunctionTok{lm}\NormalTok{(yeff }\SpecialCharTok{\textasciitilde{}}\NormalTok{ seff }\SpecialCharTok{+}\NormalTok{ trtZ, }\AttributeTok{data =}\NormalTok{ idat}\SpecialCharTok{$}\NormalTok{rdat))}
+  
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+We start by generating \(\nu_j, Z_j, U_j\) for \(j = 1, \ldots, 64\) all
+from independent standard normal distributions. Recall that \(\nu_j\)
+represents the treatment effect on the potential surrogate in group
+\(i\), and \(Z_j\) is an observed treatment-level covariate, and \(U_i\)
+is an unobserved treatment-level covariate. We consider the following
+scenarios for generation of \(\mu_j\), the treatment effect on the
+clinical outcome.
+
+\hypertarget{nonlinear}{%
+\subsection{Nonlinear}\label{nonlinear}}
+
+\[\mu_j = 1 - \sum_{i = 1}^4 \beta_i B_i(\nu_j) - \gamma_1 Z_j - \gamma_2 U_j,\]
+
+where \(B_i(\cdot), i = 1, \ldots, 4\) is a linear B-spline basis with
+knots at \(-1, 0, 1\), \(\beta = (0, .6, 3, 5)\).
+
+When \(\gamma_1 = \gamma_2 = 0\), we have the following relationship:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{idat }\OtherTok{\textless{}{-}} \FunctionTok{generate\_data}\NormalTok{(}\AttributeTok{effect =} \StringTok{"nonlinear"}\NormalTok{, }\AttributeTok{Zeffect =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{Ueffect =} \ConstantTok{FALSE}\NormalTok{)}
+\FunctionTok{summary\_scenario}\NormalTok{(idat)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{C:/Users/micsac/OneDrive - KI.SE/Methods/Bayesian DPP Surrogate/dpsurrogate/vignettes/scenarios_files/figure-latex/nonlin00-1.pdf}
+
+\begin{verbatim}
+#> 
+#> Call:
+#> lm(formula = yeff ~ seff + trtZ, data = idat$rdat)
+#> 
+#> Residuals:
+#>      Min       1Q   Median       3Q      Max 
+#> -1.36355 -0.30772  0.00826  0.35606  0.58445 
+#> 
+#> Coefficients:
+#>             Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept) -0.18034    0.05395  -3.343  0.00142 ** 
+#> seff         1.20332    0.06061  19.852  < 2e-16 ***
+#> trtZ         0.05891    0.05352   1.101  0.27532    
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Residual standard error: 0.4257 on 61 degrees of freedom
+#> Multiple R-squared:  0.8701, Adjusted R-squared:  0.8659 
+#> F-statistic: 204.3 on 2 and 61 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+When \(\gamma_1 = 0.25, \gamma_2 = 0\), we have the following
+relationship:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{idat }\OtherTok{\textless{}{-}} \FunctionTok{generate\_data}\NormalTok{(}\AttributeTok{effect =} \StringTok{"nonlinear"}\NormalTok{, }\AttributeTok{Zeffect =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{Ueffect =} \ConstantTok{FALSE}\NormalTok{)}
+\FunctionTok{summary\_scenario}\NormalTok{(idat)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{C:/Users/micsac/OneDrive - KI.SE/Methods/Bayesian DPP Surrogate/dpsurrogate/vignettes/scenarios_files/figure-latex/nonlin10-1.pdf}
+
+\begin{verbatim}
+#> 
+#> Call:
+#> lm(formula = yeff ~ seff + trtZ, data = idat$rdat)
+#> 
+#> Residuals:
+#>     Min      1Q  Median      3Q     Max 
+#> -1.4788 -0.3829  0.1867  0.3963  0.6035 
+#> 
+#> Coefficients:
+#>             Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept) -0.31362    0.06844  -4.582 2.33e-05 ***
+#> seff         0.97299    0.07022  13.857  < 2e-16 ***
+#> trtZ         0.10742    0.06756   1.590    0.117    
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Residual standard error: 0.513 on 61 degrees of freedom
+#> Multiple R-squared:  0.7596, Adjusted R-squared:  0.7517 
+#> F-statistic: 96.35 on 2 and 61 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+When \(\gamma_1 = 0, \gamma_2 = 0.25\), we have the following
+relationship:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{idat }\OtherTok{\textless{}{-}} \FunctionTok{generate\_data}\NormalTok{(}\AttributeTok{effect =} \StringTok{"nonlinear"}\NormalTok{, }\AttributeTok{Zeffect =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{Ueffect =} \ConstantTok{TRUE}\NormalTok{)}
+\FunctionTok{summary\_scenario}\NormalTok{(idat)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{C:/Users/micsac/OneDrive - KI.SE/Methods/Bayesian DPP Surrogate/dpsurrogate/vignettes/scenarios_files/figure-latex/nonlin01-1.pdf}
+
+\begin{verbatim}
+#> 
+#> Call:
+#> lm(formula = yeff ~ seff + trtZ, data = idat$rdat)
+#> 
+#> Residuals:
+#>     Min      1Q  Median      3Q     Max 
+#> -1.4528 -0.3335  0.0589  0.3234  1.1215 
+#> 
+#> Coefficients:
+#>             Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept) -0.20673    0.06680  -3.095  0.00297 ** 
+#> seff         1.18433    0.06425  18.433  < 2e-16 ***
+#> trtZ         0.14746    0.05952   2.477  0.01602 *  
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Residual standard error: 0.517 on 61 degrees of freedom
+#> Multiple R-squared:  0.8596, Adjusted R-squared:  0.855 
+#> F-statistic: 186.7 on 2 and 61 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+When \(\gamma_1 = \gamma_2 = 0.25\), we have the following relationship:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{idat }\OtherTok{\textless{}{-}} \FunctionTok{generate\_data}\NormalTok{(}\AttributeTok{effect =} \StringTok{"nonlinear"}\NormalTok{, }\AttributeTok{Zeffect =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{Ueffect =} \ConstantTok{TRUE}\NormalTok{)}
+\FunctionTok{summary\_scenario}\NormalTok{(idat)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{C:/Users/micsac/OneDrive - KI.SE/Methods/Bayesian DPP Surrogate/dpsurrogate/vignettes/scenarios_files/figure-latex/nonlin11-1.pdf}
+
+\begin{verbatim}
+#> 
+#> Call:
+#> lm(formula = yeff ~ seff + trtZ, data = idat$rdat)
+#> 
+#> Residuals:
+#>      Min       1Q   Median       3Q      Max 
+#> -1.16829 -0.41350  0.01023  0.35952  1.00502 
+#> 
+#> Coefficients:
+#>              Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept) -0.516091   0.068352  -7.551 2.61e-10 ***
+#> seff         1.124208   0.060664  18.532  < 2e-16 ***
+#> trtZ         0.007399   0.067747   0.109    0.913    
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Residual standard error: 0.5431 on 61 degrees of freedom
+#> Multiple R-squared:  0.8494, Adjusted R-squared:  0.8445 
+#> F-statistic: 172.1 on 2 and 61 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\hypertarget{linear}{%
+\subsection{Linear}\label{linear}}
+
+\[\mu_j = 1 - 1 \nu_j - \gamma_1 Z_j - \gamma_2 U_j.\]
+
+When \(\gamma_1 = \gamma_2 = 0\), we have the following relationship:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{idat }\OtherTok{\textless{}{-}} \FunctionTok{generate\_data}\NormalTok{(}\AttributeTok{effect =} \StringTok{"linear"}\NormalTok{, }\AttributeTok{Zeffect =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{Ueffect =} \ConstantTok{FALSE}\NormalTok{)}
+\FunctionTok{summary\_scenario}\NormalTok{(idat)}
+\CommentTok{\#\textgreater{} Warning in summary.lm(lm(yeff \textasciitilde{} seff + trtZ, data = idat$rdat)): essentially}
+\CommentTok{\#\textgreater{} perfect fit: summary may be unreliable}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{C:/Users/micsac/OneDrive - KI.SE/Methods/Bayesian DPP Surrogate/dpsurrogate/vignettes/scenarios_files/figure-latex/lin00-1.pdf}
+
+\begin{verbatim}
+#> 
+#> Call:
+#> lm(formula = yeff ~ seff + trtZ, data = idat$rdat)
+#> 
+#> Residuals:
+#>        Min         1Q     Median         3Q        Max 
+#> -5.840e-16 -2.156e-16 -1.466e-16 -6.080e-17  9.246e-15 
+#> 
+#> Coefficients:
+#>              Estimate Std. Error   t value Pr(>|t|)    
+#> (Intercept) 1.000e+00  1.531e-16 6.533e+15   <2e-16 ***
+#> seff        1.000e+00  1.411e-16 7.087e+15   <2e-16 ***
+#> trtZ        2.524e-17  1.574e-16 1.600e-01    0.873    
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Residual standard error: 1.201e-15 on 61 degrees of freedom
+#> Multiple R-squared:      1,  Adjusted R-squared:      1 
+#> F-statistic: 2.526e+31 on 2 and 61 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+When \(\gamma_1 = 0.25, \gamma_2 = 0\), we have the following
+relationship:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{idat }\OtherTok{\textless{}{-}} \FunctionTok{generate\_data}\NormalTok{(}\AttributeTok{effect =} \StringTok{"linear"}\NormalTok{, }\AttributeTok{Zeffect =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{Ueffect =} \ConstantTok{FALSE}\NormalTok{)}
+\FunctionTok{summary\_scenario}\NormalTok{(idat)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{C:/Users/micsac/OneDrive - KI.SE/Methods/Bayesian DPP Surrogate/dpsurrogate/vignettes/scenarios_files/figure-latex/lin10-1.pdf}
+
+\begin{verbatim}
+#> 
+#> Call:
+#> lm(formula = yeff ~ seff + trtZ, data = idat$rdat)
+#> 
+#> Residuals:
+#>      Min       1Q   Median       3Q      Max 
+#> -0.54450 -0.09026  0.00940  0.15649  0.25958 
+#> 
+#> Coefficients:
+#>              Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept)  0.776945   0.022272  34.884   <2e-16 ***
+#> seff         0.976576   0.021445  45.538   <2e-16 ***
+#> trtZ        -0.002619   0.019924  -0.131    0.896    
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Residual standard error: 0.1777 on 61 degrees of freedom
+#> Multiple R-squared:  0.9723, Adjusted R-squared:  0.9714 
+#> F-statistic:  1071 on 2 and 61 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+When \(\gamma_1 = 0, \gamma_2 = 0.25\), we have the following
+relationship:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{idat }\OtherTok{\textless{}{-}} \FunctionTok{generate\_data}\NormalTok{(}\AttributeTok{effect =} \StringTok{"linear"}\NormalTok{, }\AttributeTok{Zeffect =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{Ueffect =} \ConstantTok{TRUE}\NormalTok{)}
+\FunctionTok{summary\_scenario}\NormalTok{(idat)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{C:/Users/micsac/OneDrive - KI.SE/Methods/Bayesian DPP Surrogate/dpsurrogate/vignettes/scenarios_files/figure-latex/lin01-1.pdf}
+
+\begin{verbatim}
+#> 
+#> Call:
+#> lm(formula = yeff ~ seff + trtZ, data = idat$rdat)
+#> 
+#> Residuals:
+#>      Min       1Q   Median       3Q      Max 
+#> -0.37720 -0.16506 -0.01754  0.12497  0.66684 
+#> 
+#> Coefficients:
+#>              Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept)  1.004017   0.029248  34.328   <2e-16 ***
+#> seff         1.009724   0.030369  33.249   <2e-16 ***
+#> trtZ        -0.002374   0.026656  -0.089    0.929    
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Residual standard error: 0.2332 on 61 degrees of freedom
+#> Multiple R-squared:  0.949,  Adjusted R-squared:  0.9474 
+#> F-statistic:   568 on 2 and 61 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+When \(\gamma_1 = \gamma_2 = 0.25\), we have the following relationship:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{idat }\OtherTok{\textless{}{-}} \FunctionTok{generate\_data}\NormalTok{(}\AttributeTok{effect =} \StringTok{"linear"}\NormalTok{, }\AttributeTok{Zeffect =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{Ueffect =} \ConstantTok{TRUE}\NormalTok{)}
+\FunctionTok{summary\_scenario}\NormalTok{(idat)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{C:/Users/micsac/OneDrive - KI.SE/Methods/Bayesian DPP Surrogate/dpsurrogate/vignettes/scenarios_files/figure-latex/lin11-1.pdf}
+
+\begin{verbatim}
+#> 
+#> Call:
+#> lm(formula = yeff ~ seff + trtZ, data = idat$rdat)
+#> 
+#> Residuals:
+#>      Min       1Q   Median       3Q      Max 
+#> -0.89928 -0.17864 -0.00527  0.18925  0.75112 
+#> 
+#> Coefficients:
+#>             Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept)  0.82559    0.04505  18.328   <2e-16 ***
+#> seff         0.97547    0.05054  19.301   <2e-16 ***
+#> trtZ        -0.04663    0.04215  -1.106    0.273    
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Residual standard error: 0.3489 on 61 degrees of freedom
+#> Multiple R-squared:  0.8597, Adjusted R-squared:  0.8551 
+#> F-statistic: 186.9 on 2 and 61 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\hypertarget{null}{%
+\subsection{Null}\label{null}}
+
+\[\mu_j = 0 - 0 \nu_j - \gamma_1 Z_j - \gamma_2 U_j.\]
+
+When \(\gamma_1 = \gamma_2 = 0\), we have the following relationship:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{idat }\OtherTok{\textless{}{-}} \FunctionTok{generate\_data}\NormalTok{(}\AttributeTok{effect =} \StringTok{"null"}\NormalTok{, }\AttributeTok{Zeffect =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{Ueffect =} \ConstantTok{FALSE}\NormalTok{)}
+\FunctionTok{summary\_scenario}\NormalTok{(idat)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{C:/Users/micsac/OneDrive - KI.SE/Methods/Bayesian DPP Surrogate/dpsurrogate/vignettes/scenarios_files/figure-latex/null00-1.pdf}
+
+\begin{verbatim}
+#> 
+#> Call:
+#> lm(formula = yeff ~ seff + trtZ, data = idat$rdat)
+#> 
+#> Residuals:
+#>    Min     1Q Median     3Q    Max 
+#>      0      0      0      0      0 
+#> 
+#> Coefficients:
+#>             Estimate Std. Error t value Pr(>|t|)
+#> (Intercept)        0          0     NaN      NaN
+#> seff               0          0     NaN      NaN
+#> trtZ               0          0     NaN      NaN
+#> 
+#> Residual standard error: 0 on 61 degrees of freedom
+#> Multiple R-squared:    NaN,  Adjusted R-squared:    NaN 
+#> F-statistic:   NaN on 2 and 61 DF,  p-value: NA
+\end{verbatim}
+
+When \(\gamma_1 = 0.25, \gamma_2 = 0\), we have the following
+relationship:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{idat }\OtherTok{\textless{}{-}} \FunctionTok{generate\_data}\NormalTok{(}\AttributeTok{effect =} \StringTok{"null"}\NormalTok{, }\AttributeTok{Zeffect =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{Ueffect =} \ConstantTok{FALSE}\NormalTok{)}
+\FunctionTok{summary\_scenario}\NormalTok{(idat)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{C:/Users/micsac/OneDrive - KI.SE/Methods/Bayesian DPP Surrogate/dpsurrogate/vignettes/scenarios_files/figure-latex/null10-1.pdf}
+
+\begin{verbatim}
+#> 
+#> Call:
+#> lm(formula = yeff ~ seff + trtZ, data = idat$rdat)
+#> 
+#> Residuals:
+#>      Min       1Q   Median       3Q      Max 
+#> -0.38443 -0.07730  0.01868  0.12789  0.23381 
+#> 
+#> Coefficients:
+#>             Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept) -0.22696    0.01970 -11.522   <2e-16 ***
+#> seff        -0.01486    0.02528  -0.588    0.559    
+#> trtZ         0.02162    0.01794   1.205    0.233    
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Residual standard error: 0.1547 on 61 degrees of freedom
+#> Multiple R-squared:  0.03308,    Adjusted R-squared:  0.00138 
+#> F-statistic: 1.044 on 2 and 61 DF,  p-value: 0.3584
+\end{verbatim}
+
+When \(\gamma_1 = 0, \gamma_2 = 0.25\), we have the following
+relationship:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{idat }\OtherTok{\textless{}{-}} \FunctionTok{generate\_data}\NormalTok{(}\AttributeTok{effect =} \StringTok{"null"}\NormalTok{, }\AttributeTok{Zeffect =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{Ueffect =} \ConstantTok{TRUE}\NormalTok{)}
+\FunctionTok{summary\_scenario}\NormalTok{(idat)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{C:/Users/micsac/OneDrive - KI.SE/Methods/Bayesian DPP Surrogate/dpsurrogate/vignettes/scenarios_files/figure-latex/null01-1.pdf}
+
+\begin{verbatim}
+#> 
+#> Call:
+#> lm(formula = yeff ~ seff + trtZ, data = idat$rdat)
+#> 
+#> Residuals:
+#>      Min       1Q   Median       3Q      Max 
+#> -0.73529 -0.12776  0.05414  0.18675  0.68467 
+#> 
+#> Coefficients:
+#>              Estimate Std. Error t value Pr(>|t|)
+#> (Intercept)  0.016935   0.035066   0.483    0.631
+#> seff        -0.009874   0.040836  -0.242    0.810
+#> trtZ         0.025023   0.035519   0.704    0.484
+#> 
+#> Residual standard error: 0.2771 on 61 degrees of freedom
+#> Multiple R-squared:  0.008716,   Adjusted R-squared:  -0.02379 
+#> F-statistic: 0.2682 on 2 and 61 DF,  p-value: 0.7657
+\end{verbatim}
+
+When \(\gamma_1 = \gamma_2 = 0.25\), we have the following relationship:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{idat }\OtherTok{\textless{}{-}} \FunctionTok{generate\_data}\NormalTok{(}\AttributeTok{effect =} \StringTok{"null"}\NormalTok{, }\AttributeTok{Zeffect =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{Ueffect =} \ConstantTok{TRUE}\NormalTok{)}
+\FunctionTok{summary\_scenario}\NormalTok{(idat)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{C:/Users/micsac/OneDrive - KI.SE/Methods/Bayesian DPP Surrogate/dpsurrogate/vignettes/scenarios_files/figure-latex/null11-1.pdf}
+
+\begin{verbatim}
+#> 
+#> Call:
+#> lm(formula = yeff ~ seff + trtZ, data = idat$rdat)
+#> 
+#> Residuals:
+#>      Min       1Q   Median       3Q      Max 
+#> -0.69535 -0.16619 -0.01165  0.17039  0.61288 
+#> 
+#> Coefficients:
+#>             Estimate Std. Error t value Pr(>|t|)    
+#> (Intercept) -0.19285    0.03706  -5.204 2.42e-06 ***
+#> seff         0.06011    0.03423   1.756    0.084 .  
+#> trtZ         0.01467    0.03052   0.481    0.633    
+#> ---
+#> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#> 
+#> Residual standard error: 0.2879 on 61 degrees of freedom
+#> Multiple R-squared:  0.04942,    Adjusted R-squared:  0.01825 
+#> F-statistic: 1.586 on 2 and 61 DF,  p-value: 0.2132
+\end{verbatim}
+
+\end{document}

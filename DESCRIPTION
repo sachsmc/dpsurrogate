@@ -15,7 +15,9 @@ Depends:
   rjags,
   mvtnorm,
   dirichletprocess,
-  splines
+  splines,
+  parallel,
+  MCMCpack
 RoxygenNote: 7.1.1
 Suggests: 
     rmarkdown,

@@ -189,9 +189,9 @@ sim_trial <- function(ri_gx, ri_gx2, f_alter = 1, smart = FALSE,
     sim_dat  <- update_dat(sim_dat, month)
     sum_stat <- update_sumstat(sim_dat, input)
 
-
+    ttrt <- table(sim_dat$trt, sim_dat$subtype)
     # stop after mxmonth months
-    if (month >= input$sim_thld$mxmonth){
+    if (month >= input$sim_thld$mxmonth & all(ttrt > 2)){
       break
     }
 
@@ -343,11 +343,11 @@ eval_trt <- function(res, tres, month, sum_stat, input){
 
   # maximum sample size
   sub_max <- which(sum_stat$type$n[, -1] >= input$sim_thld$nmax & is.na(res$stop_type), arr.ind = T)
-  if(nrow(sub_max) > 0) {
-    for(i in 1:nrow(sub_max)) {
-      s <- sub_max[i,]
-      res$stop_type[s[1], s[2]] <- 0
-    }}
+  # if(nrow(sub_max) > 0) {
+  #   for(i in 1:nrow(sub_max)) {
+  #     s <- sub_max[i,]
+  #     res$stop_type[s[1], s[2]] <- 0
+  #   }}
 
   # saving results for graduation/futility
   sub_stop <- cbind(rbind(if (nrow(sub_sup) > 0) cbind(sub_sup, type = 1),
