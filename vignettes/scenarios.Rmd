@@ -42,7 +42,7 @@ We start by generating $\nu_j, Z_j, U_j$ for $j = 1, \ldots, 64$ all from indepe
 
 ## Nonlinear
 
-$$\mu_j = 1 - \sum_{i = 1}^4 \beta_i B_i(\nu_j) - \gamma_1 Z_j - \gamma_2 U_j,$$
+$$\mu_j = 1 - \sum_{i = 1}^4 \beta_i B_i(\nu_j) - \gamma_1 |Z_j| - \gamma_2 U_j,$$
 
 where $B_i(\cdot), i = 1, \ldots, 4$ is a linear B-spline basis with knots at $-1, 0, 1$, $\beta = (0, .6, 3, 5)$. 
 
@@ -82,7 +82,7 @@ summary_scenario(idat)
 ## Linear
 
 
-$$\mu_j = 1 - 1 \nu_j - \gamma_1 Z_j - \gamma_2 U_j.$$
+$$\mu_j = 1 - 1 \nu_j - \gamma_1 |Z_j| - \gamma_2 U_j.$$
 
 
 When $\gamma_1 = \gamma_2 = 0$, we have the following relationship:
@@ -120,7 +120,7 @@ summary_scenario(idat)
 ## Null
 
 
-$$\mu_j = 0 - 0 \nu_j - \gamma_1 Z_j - \gamma_2 U_j.$$
+$$\mu_j = 0 - 0 \nu_j - \gamma_1 |Z_j| - \gamma_2 U_j.$$
 
 When $\gamma_1 = \gamma_2 = 0$, we have the following relationship:
 

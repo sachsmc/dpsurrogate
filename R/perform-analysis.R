@@ -173,14 +173,15 @@ run_one_analysis <- function(boo, niter = 50) {
     #cat(j, "\n")
   }
 
-  list(res.s = res.s, res.y = res.y)
+  list(res.s = res.s, res.y = res.y, jags.state = init.l,
+       clusters = dp$clusterLabels)
 
 }
 
 #' Run one analysis leaving one subgroup out
 #' @export
 
-run_one_loo <- function(boo, lout, niter = 50) {
+run_one_loo <- function(boo, lout, niter = 50, jags.state = NULL) {
 
   #boo <- generate_data()
 
@@ -234,13 +235,24 @@ run_one_loo <- function(boo, lout, niter = 50) {
                       prior_sig = prior.sig)
 
     if(j == 1) {
-      tmod <- jags.model(system.file("regmodel.bug", package = "dpsurrogate"), test_data, n.adapt = 100, quiet = TRUE)
+
+      if(!is.null(jags.state)) {
+        tmod <- jags.model(system.file("regmodel.bug", package = "dpsurrogate"),
+                           inits = jags.state,
+                           test_data, n.adapt = 0, quiet = TRUE)
+        tmp <- adapt(tmod, n.iter = 0, end.adaptation = TRUE)
+      } else {
+        tmod <- jags.model(system.file("regmodel.bug", package = "dpsurrogate"),
+                           test_data, n.adapt = 100, quiet = TRUE)
+      }
+
       tsam <- jags.samples(tmod, c("beta_s", "beta_y"), n.iter = 50)
 
 
     } else {
 
-      tmod <- jags.model(system.file("regmodel.bug", package = "dpsurrogate"), test_data, inits = tmod$state(), n.adapt = 0, quiet = TRUE)
+      tmod <- jags.model(system.file("regmodel.bug", package = "dpsurrogate"), test_data,
+                         inits = tmod$state(), n.adapt = 0, quiet = TRUE)
       tmp <- adapt(tmod, n.iter = 0, end.adaptation = TRUE)
       tsam <- jags.samples(tmod, c("beta_s", "beta_y"), n.iter = 10)
 
@@ -269,7 +281,7 @@ run_one_loo <- function(boo, lout, niter = 50) {
     dmatin <- cbind(newdmat, boo$rdat$trtZ)
     dp <- ChangeObservations(dp, dmatin)
 
-    dpTry <- tryCatch(Fit(dp, 40, progressBar = FALSE),
+    dpTry <- tryCatch(Fit(dp, 10, progressBar = FALSE),
                       error = function(e) "singular")
     if(identical(dpTry, "singular")) {
       next
@@ -370,14 +382,14 @@ run_one_null <- function(boo, niter = 50) {
     #cat(j, "\n")
   }
 
-  list(res.s = res.s, res.y = res.y)
+  list(res.s = res.s, res.y = res.y, jags.state = init.l)
 
 }
 
 #' Run one null model leaving out trial lout
 #' @export
 
-run_one_loo_null <- function(boo, lout, niter = 50) {
+run_one_loo_null <- function(boo, lout, niter = 50, jags.state = NULL) {
 
   #boo <- generate_data()
 
@@ -424,13 +436,25 @@ run_one_loo_null <- function(boo, lout, niter = 50) {
                       prior_sig = prior.sig)
 
     if(j == 1) {
-      tmod <- jags.model(system.file("regmodel-null.bug", package = "dpsurrogate"), test_data, n.adapt = 100, quiet = TRUE)
+
+      if(!is.null(jags.state)) {
+        tmod <- jags.model(system.file("regmodel-null.bug", package = "dpsurrogate"),
+                           inits = jags.state,
+                           test_data, n.adapt = 0, quiet = TRUE)
+        tmp <- adapt(tmod, n.iter = 0, end.adaptation = TRUE)
+      } else {
+
+        tmod <- jags.model(system.file("regmodel-null.bug", package = "dpsurrogate"),
+                           test_data, n.adapt = 100, quiet = TRUE)
+      }
+
       tsam <- jags.samples(tmod, c("beta_y"), n.iter = 50)
 
 
     } else {
 
-      tmod <- jags.model(system.file("regmodel-null.bug", package = "dpsurrogate"), test_data, inits = tmod$state(), n.adapt = 0, quiet = TRUE)
+      tmod <- jags.model(system.file("regmodel-null.bug", package = "dpsurrogate"),
+                         test_data, inits = tmod$state(), n.adapt = 0, quiet = TRUE)
       tmp <- adapt(tmod, n.iter = 0, end.adaptation = TRUE)
       tsam <- jags.samples(tmod, c("beta_y"), n.iter = 10)
 
@@ -445,7 +469,7 @@ run_one_loo_null <- function(boo, lout, niter = 50) {
       yeff = res.y[j, ]))
     dmatin <- cbind(newdmat, boo$rdat$trtZ)
     dp <- ChangeObservations(dp, dmatin)
-    dpTry <- tryCatch(Fit(dp, 50, progressBar = FALSE),
+    dpTry <- tryCatch(Fit(dp, 10, progressBar = FALSE),
                       error = function(e) "singular")
     if(identical(dpTry, "singular")) {
       next

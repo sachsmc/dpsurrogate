@@ -27,17 +27,16 @@ run_one_replicate <- function(effect = "nonlinear", Zeffect = FALSE,
     library(dpsurrogate)
   })
   clusterExport(cl, c("idat"), envir = environment())
-
-  #resWho <- clusterApply(cl, 1:64, function(i) {
-for(i in 1:64) {
-    restmp <- run_one_loo(idat, i, niter = niter)
-    restmp2 <- run_one_loo_null(idat, i, niter = niter)
-    restmp3 <- run_one_loo_simple_analysis(idat, i, niter = niter)
+#for(i in 1:64) {
+ resWho <- clusterApply(cl, 1:64, function(i) {
+    restmp <- run_one_loo(idat, i, niter = niter, jags.state = resall$jags.state)
+    restmp2 <- run_one_loo_null(idat, i, niter = niter, jags.state = resnull$jags.state)
+    restmp3 <- run_one_loo_simple_analysis(idat, i, niter = niter, jags.state = ressimp$jags.state)
+    data.frame(dpsur = restmp$res.y, null = restmp2$res.y,
+               simple = restmp3$res.y, leftout = i)
     cat(i, "\n")
-    #data.frame(dpsur = restmp$res.y, null = restmp2$res.y,
-    #           simple = restmp3$res.y, leftout = i)
-}
-#  })
+#}
+ })
   resWho <- do.call(rbind, resWho)
 
   stopCluster(cl)

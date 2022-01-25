@@ -20,7 +20,7 @@ gen_input <- function(pop, ln_cr, subtypes_cr, signatures_cr, return_to_env = FA
     nupdate = 40,         # number of enrolled patients in the active arms before updating randomization prob
     nmin2   = 80,          # minimum number of enrolled patients in each treatment-subgroup combination for evaluation
     mxmonth = 36,         # n months follow-up
-    k       = 60,         # n patients recruited per month
+    k       = 15,         # n patients recruited per month
     pU      = 0.90,       # thresholds for early stopping: graduation
     pU2     = 0.85,        # thresholds subtypes graduation probability
     pU2n    = 0.50,       # same as pU2 but for n < nmin2
@@ -189,9 +189,21 @@ sim_trial <- function(ri_gx, ri_gx2, f_alter = 1, smart = FALSE,
     sim_dat  <- update_dat(sim_dat, month)
     sum_stat <- update_sumstat(sim_dat, input)
 
-    ttrt <- table(sim_dat$trt, sim_dat$subtype)
+    ttrt <- sum_stat$type$n
     # stop after mxmonth months
-    if (month >= input$sim_thld$mxmonth & all(ttrt > 2)){
+    if (month >= input$sim_thld$mxmonth){
+
+      if(!all(sum_stat$type$n > 2)) {
+
+        tmp_rprob <- matrix(0.01, nrow = nrow(input$r_prob$type),
+                            ncol = ncol(input$r_prob$type))
+        tmp_rprob[sum_stat$type$n <= 2] <- 1
+        tmp_rprob <- tmp_rprob / do.call(cbind, lapply(1:ncol(tmp_rprob), function(x) {rowSums(tmp_rprob)}))
+        tmp_rprob[is.nan(tmp_rprob)] <- 1 / 5
+        input$r_prob$type <- tmp_rprob
+        next
+
+      }
       break
     }
 
@@ -238,8 +250,8 @@ next_cohort <- function(sim_dat, month, ri_gx, ri_gx2, input){
 
   # n <- structure(c(rmultinom(1, size = sim_thld$k, prob = subtypes$prev)),
   #                names = ln$names_type) # simulate k subtypes
-  prev_subtype <- c(MCMCpack::rdirichlet(1, 100*input$subtypes$prev))
-  n <- structure(c(rmultinom(1, size = input$sim_thld$k, prob = prev_subtype)),
+  #prev_subtype <- c(MCMCpack::rdirichlet(1, 100*input$subtypes$prev))
+  n <- structure(c(rmultinom(1, size = input$sim_thld$k, prob = input$subtypes$prev)),
                  names = input$ln$names_type) # simulate k subtypes
   # stop randomize patients when no treatment is available
   if (any(rowSums(input$r_prob$type[, -1]) == 0)){

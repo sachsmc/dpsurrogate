@@ -5,7 +5,7 @@ for(i in 5:10) {
 
 
 res <- run_one_replicate(effect = "nonlinear", Zeffect = FALSE,
-                        Ueffect = FALSE, niter = 50, nnodes = 6)
+                        Ueffect = FALSE, niter = 50, nnodes = 7)
 
 
 

@@ -10,7 +10,7 @@ run_one_simple_analysis <- function(boo, niter = 50) {
 
   subtypes <- levels(ldat$J)
 
-  Xmat <- model.matrix( ~ subtype + subtype:trt:trttype -1, data = ldat)
+  Xmat <- model.matrix( ~ subtype + J:trt -1, data = ldat)
   logYY <- log(ldat$time)
   SS <- ldat$ctDNA_fu
 
@@ -45,7 +45,7 @@ run_one_simple_analysis <- function(boo, niter = 50) {
     res.y[1:niter, ] <- t(as.matrix(tsam$beta_y[-c(1:16), , 1]))
 
 
-  list(res.s = res.s, res.y = res.y)
+  list(res.s = res.s, res.y = res.y, jags.state = tmod$state())
 
 }
 
@@ -53,7 +53,7 @@ run_one_simple_analysis <- function(boo, niter = 50) {
 #' Run a leave one out data analysis (not leave one out) using just a bivariate normal hierarchical model
 #' @export
 
-run_one_loo_simple_analysis <- function(boo, lout, niter = 50) {
+run_one_loo_simple_analysis <- function(boo, lout, niter = 50, jags.state = NULL) {
 
   #boo <- generate_data()
 
@@ -63,7 +63,7 @@ run_one_loo_simple_analysis <- function(boo, lout, niter = 50) {
 
   ldat$time[ldat$J == subtypes[lout]] <- NA
 
-  Xmat <- model.matrix( ~ subtype + subtype:trt:trttype -1, data = ldat)
+  Xmat <- model.matrix( ~ subtype + J:trt -1, data = ldat)
   logYY <- log(ldat$time)
   SS <- ldat$ctDNA_fu
 
@@ -89,8 +89,15 @@ run_one_loo_simple_analysis <- function(boo, lout, niter = 50) {
                     prior_sig = prior.sig)
 
 
-  tmod <- jags.model(system.file("normalmodel.bug", package = "dpsurrogate"),
+  if(!is.null(jags.state)) {
+    tmod <- jags.model(system.file("normalmodel.bug", package = "dpsurrogate"),
+                       inits = jags.state,
+                       test_data, n.adapt = 0, quiet = TRUE)
+    tmp <- adapt(tmod, n.iter = 0, end.adaptation = TRUE)
+  } else {
+    tmod <- jags.model(system.file("normalmodel.bug", package = "dpsurrogate"),
                      test_data, n.adapt = 100, quiet = TRUE)
+  }
   tsam <- jags.samples(tmod, c("beta_s", "beta_y"), n.iter = niter)
 
 

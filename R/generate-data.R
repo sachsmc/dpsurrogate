@@ -247,7 +247,7 @@ generate_data <- function(effect = "nonlinear", Zeffect = FALSE, Ueffect = FALSE
 
 
   trtZ <- rnorm(64)
-  seff <- rnorm(64, sd = 1)
+  seff <- rnorm(64, sd = 1.45)
 
   UU <- rnorm(64)
 
@@ -257,8 +257,9 @@ generate_data <- function(effect = "nonlinear", Zeffect = FALSE, Ueffect = FALSE
   if(effect == "nonlinear") {
 
     sbeff <- bs(seff, knots = c(-1, 0, 1), degree = 1, Boundary.knots = c(-4, 4))
-    yeff <- -1 + sbeff %*% c(0, .6, 3, 5) +
+    yeff <- -1 + sbeff %*% c(-.05, .6, 3, 3.5) +
       + Zeff * abs(trtZ) + Ueff * UU
+    #plot(yeff ~ seff)
 
   } else if(effect == "linear") {
 
