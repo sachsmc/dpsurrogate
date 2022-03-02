@@ -4,7 +4,7 @@
 \alias{run_one_loo}
 \title{Run one analysis leaving one subgroup out}
 \usage{
-run_one_loo(boo, lout, niter = 50)
+run_one_loo(boo, lout, niter = 50, jags.state = NULL)
 }
 \description{
 Run one analysis leaving one subgroup out

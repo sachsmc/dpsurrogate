@@ -100,7 +100,7 @@ run_one_analysis <- function(boo, niter = 50) {
 
   initclus <- kmeans(as.matrix(init[, 1:2]), centers = 10)
 
-  Xmat <- model.matrix( ~ subtype + subtype:trt:trttype -1, data = ldat)
+  Xmat <- model.matrix(  ~ subtype + J:trt -1, data = ldat)
   logYY <- log(ldat$time)
   SS <- ldat$ctDNA_fu
 
@@ -109,7 +109,22 @@ run_one_analysis <- function(boo, niter = 50) {
   cur <- init
 
   dmat <- cbind(as.matrix(cur[, c("seff", "yeff")]), boo$rdat$trtZ)
-  dp <- DirichletProcessMvnormal(dmat, alphaPriors = c(2, 4), numInitialClusters = length(initclus$size))
+
+
+  mu0hat <- c(colSums(dmat[, -3] * boo$rdat$ngrp) / sum(boo$rdat$ngrp),
+              mean(boo$rdat$trtZ))
+
+  v0hat <- c(colSums((dmat[, -3] - mu0hat[-3])^2 * boo$rdat$ngrp) / sum(boo$rdat$ngrp), var(boo$rdat$trtZ))
+
+  basepriors <- list(mu0 = mu0hat,
+                     Lambda = diag(v0hat) * 4,
+                     kappa0 = ncol(dmat),
+                     nu = ncol(dmat))
+
+  dp <- DirichletProcessMvnormal(dmat,
+                                 g0Priors = basepriors,
+                                 alphaPriors = c(1, 2),
+                                 numInitialClusters = length(initclus$size))
   dp <- Fit(dp, 200, progressBar = FALSE)
   dp <- UpdateAlpha(dp)
 
@@ -183,7 +198,7 @@ run_one_analysis <- function(boo, niter = 50) {
 
 run_one_loo <- function(boo, lout, niter = 50, jags.state = NULL) {
 
-  #boo <- generate_data()
+  #boo <- generate_data(effect = "null")
 
   ldat <- boo$ldat
   subtypes <- levels(ldat$J)
@@ -206,7 +221,22 @@ run_one_loo <- function(boo, lout, niter = 50, jags.state = NULL) {
   cur <- init
 
   dmat <- cbind(as.matrix(cur[, c("seff", "yeff")]), boo$rdat$trtZ)
-  dp <- DirichletProcessMvnormal(dmat, alphaPriors = c(2, 4), numInitialClusters = length(initclus$size))
+
+  mu0hat <- c(colSums(dmat[, -3] * boo$rdat$ngrp) / sum(boo$rdat$ngrp),
+              mean(boo$rdat$trtZ))
+
+  v0hat <- c(colSums((dmat[, -3] - mu0hat[-3])^2 * boo$rdat$ngrp) / sum(boo$rdat$ngrp), var(boo$rdat$trtZ))
+
+  basepriors <- list(mu0 = mu0hat,
+                   Lambda = diag(v0hat) * 4,
+                   kappa0 = ncol(dmat),
+                   nu = ncol(dmat))
+
+  dp <- DirichletProcessMvnormal(dmat,
+                                 g0Priors = basepriors,
+                                 alphaPriors = c(1, 2),
+                                 numInitialClusters = length(initclus$size))
+
   dp <- Fit(dp, 200, progressBar = FALSE)
   dp <- UpdateAlpha(dp)
 
@@ -281,13 +311,13 @@ run_one_loo <- function(boo, lout, niter = 50, jags.state = NULL) {
     dmatin <- cbind(newdmat, boo$rdat$trtZ)
     dp <- ChangeObservations(dp, dmatin)
 
-    dpTry <- tryCatch(Fit(dp, 10, progressBar = FALSE),
-                      error = function(e) "singular")
-    if(identical(dpTry, "singular")) {
-      next
-    } else {
-      dp <- dpTry
-    }
+    # dpTry <- tryCatch(Fit(dp, 10, progressBar = FALSE),
+    #                   error = function(e) "singular")
+    # if(identical(dpTry, "singular")) {
+    #   next
+    # } else {
+    #   dp <- dpTry
+    # }
 
     dp <- UpdateAlpha(dp)
 

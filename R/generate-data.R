@@ -1,9 +1,13 @@
 #' Generate trial and individual-level data
 #' @export
 #' @param effect String indicating relationship between seff and yeff, can be "nonlinear", "linear", "null"
+#' @param Zeffect Strength of association between trial level covariates and outcome
+#' @param Ueffect Strength of association between random noise and outcome
+#' @param Zgen Function to generate Zeffects (sample from a distribution)
+#' @param Sgen Function to generate Seffects (sample from a distribution)
 
-
-generate_data <- function(effect = "nonlinear", Zeffect = FALSE, Ueffect = FALSE) {
+generate_data <- function(effect = "nonlinear", Zeffect = 0, Ueffect = 0,
+                          Zgen = function(n) rnorm(n), Sgen = function(n) rnorm(n, sd = 1.5)) {
   ln_cr <-
     list(
       X = 5L,
@@ -246,8 +250,8 @@ generate_data <- function(effect = "nonlinear", Zeffect = FALSE, Ueffect = FALSE
   input <- gen_input("cr", ln_cr, subtypes_cr, signatures_cr, return_to_env = FALSE)
 
 
-  trtZ <- rnorm(64)
-  seff <- rnorm(64, sd = 1.45)
+  trtZ <- Zgen(64) #rnorm(64)
+  seff <- Sgen(64) #rnorm(64, sd = 1.45)
 
   UU <- rnorm(64)
 
@@ -256,7 +260,7 @@ generate_data <- function(effect = "nonlinear", Zeffect = FALSE, Ueffect = FALSE
 
   if(effect == "nonlinear") {
 
-    sbeff <- bs(seff, knots = c(-1, 0, 1), degree = 1, Boundary.knots = c(-4, 4))
+    sbeff <- bs(seff, knots = c(-1, 0, 1), degree = 1, Boundary.knots = c(-8, 8))
     yeff <- -1 + sbeff %*% c(-.05, .6, 3, 3.5) +
       + Zeff * abs(trtZ) + Ueff * UU
     #plot(yeff ~ seff)

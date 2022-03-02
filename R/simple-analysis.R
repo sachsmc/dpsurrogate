@@ -4,7 +4,7 @@
 
 run_one_simple_analysis <- function(boo, niter = 50) {
 
-  #boo <- generate_data()
+  #boo <- generate_data(Zeffect = TRUE)
 
   ldat <- boo$ldat
 
@@ -16,24 +16,16 @@ run_one_simple_analysis <- function(boo, niter = 50) {
 
   res.s <- res.y <- matrix(NA, nrow = niter, ncol = 64)
 
-    Sig <- matrix(.05, nrow = 3, ncol = 3)
-    diag(Sig) <- 2
-    flexz <- c(rep(0, 80 - 64),boo$rdat$trtZ)
+    Sig <- matrix(.05, nrow = 2, ncol = 2)
+    diag(Sig) <- 4
 
-    prior.mu <- matrix(0, nrow = 80, ncol = 2)
-    prior.sig <- array(NA, dim = c(2,2,80))
-
-    for(i in 1:80){
-      prior.mu[i, ] <- Sig[1:2,3] / Sig[3,3] * (flexz[i])
-    }
-    prior.sig <- Sig[1:2, 1:2] - Sig[1:2, 3] %*% solve(Sig[3, 3]) %*% Sig[3, 1:2]
     test_data <- list(J = ncol(Xmat),
                       N = nrow(Xmat),
                       y = logYY,
                       s = SS,
                       X = Xmat,
-                      prior_mu = prior.mu,
-                      prior_sig = prior.sig)
+                      Z = c(rep(0, 80 - 64), boo$rdat$trtZ),
+                      prior_sig = Sig)
 
 
       tmod <- jags.model(system.file("normalmodel.bug", package = "dpsurrogate"),
@@ -55,7 +47,7 @@ run_one_simple_analysis <- function(boo, niter = 50) {
 
 run_one_loo_simple_analysis <- function(boo, lout, niter = 50, jags.state = NULL) {
 
-  #boo <- generate_data()
+  #boo <- generate_data(effect = "linear")
 
   ldat <- boo$ldat
 
@@ -69,24 +61,16 @@ run_one_loo_simple_analysis <- function(boo, lout, niter = 50, jags.state = NULL
 
   res.s <- res.y <- rep(NA, 64)
 
-  Sig <- matrix(.05, nrow = 3, ncol = 3)
-  diag(Sig) <- 2
-  flexz <- c(rep(0, 80 - 64),boo$rdat$trtZ)
+  Sig <- matrix(.05, nrow = 2, ncol = 2)
+  diag(Sig) <- 4
 
-  prior.mu <- matrix(0, nrow = 80, ncol = 2)
-  prior.sig <- array(NA, dim = c(2,2,80))
-
-  for(i in 1:80){
-    prior.mu[i, ] <- Sig[1:2,3] / Sig[3,3] * (flexz[i])
-  }
-  prior.sig <- Sig[1:2, 1:2] - Sig[1:2, 3] %*% solve(Sig[3, 3]) %*% Sig[3, 1:2]
   test_data <- list(J = ncol(Xmat),
                     N = nrow(Xmat),
                     y = logYY,
                     s = SS,
                     X = Xmat,
-                    prior_mu = prior.mu,
-                    prior_sig = prior.sig)
+                    Z = c(rep(0, 80 - 64), boo$rdat$trtZ),
+                    prior_sig = Sig)
 
 
   if(!is.null(jags.state)) {

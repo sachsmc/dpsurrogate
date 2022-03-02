@@ -3,13 +3,23 @@ var beta.t[J,2], beta_s[J], beta_y[J];
 model {
 
 
+
   for(i in 1:J) {
 
     beta_s[i] <- beta.t[i,1]
     beta_y[i] <- beta.t[i,2]
-    beta.t[i,1:2] ~ dmnorm.vcov(prior_mu[i, 1:2], prior_sig[1:2,1:2])
+    beta.t[i,1:2] ~ dmnorm(mu_b[i,1:2], Omega)
+    mu_b[i,1] <- alpha_0s + alpha_1s * Z[i]
+    mu_b[i,2] <- alpha_0y + alpha_1y * Z[i]
+
 
   }
+  Omega ~ dwish(prior_sig, 2)
+
+  alpha_0s ~ dnorm(0, .01)
+  alpha_1s ~ dnorm(0, .01)
+  alpha_0y ~ dnorm(0, .01)
+  alpha_1y ~ dnorm(0, .01)
 
   mu_s <- X %*% beta_s
   mu_y <- X %*% beta_y
@@ -20,8 +30,6 @@ model {
     y[i] ~ dnorm(mu_y[i], tau_y)
 
   }
-
-
 
   tau_y <- pow(sigma_y, -2)
   tau_s <- pow(sigma_s, -2)

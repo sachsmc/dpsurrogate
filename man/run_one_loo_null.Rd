@@ -4,7 +4,7 @@
 \alias{run_one_loo_null}
 \title{Run one null model leaving out trial lout}
 \usage{
-run_one_loo_null(boo, lout, niter = 50)
+run_one_loo_null(boo, lout, niter = 50, jags.state = NULL)
 }
 \description{
 Run one null model leaving out trial lout

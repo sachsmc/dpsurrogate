@@ -97,7 +97,7 @@ gen_input <- function(pop, ln_cr, subtypes_cr, signatures_cr, return_to_env = FA
     chains = 1,                              # number of chains
     iter = 200,                             # number of iteration
     warmup = 100,                            # number of warmup
-    postp_defna = rep(NA, ln$X - 1 + 2) %>%             # default names for coefficient of the Weibull model
+    postp_defna = rep(NA, ln$X - 1 + 2) |>            # default names for coefficient of the Weibull model
       setNames(nm = c("(Intercept)", paste0("trt", ln$X_names[-1]), "weibull-shape"))
   )
 
@@ -257,12 +257,12 @@ next_cohort <- function(sim_dat, month, ri_gx, ri_gx2, input){
   if (any(rowSums(input$r_prob$type[, -1]) == 0)){
     n[input$ln$names_type[rowSums(input$r_prob$type[, -1]) == 0]] <- 0
   }
-  ngx <- Map(function(n, r) c(rmultinom(1, size = n, prob = r)),
-             n, split(input$r_prob$type, 1:nrow(input$r_prob$type))) %>%
-    do.call("rbind", .) %>% `colnames<-`(input$ln$X_names) # treatment randomization (subtypes)
+  ngx <- do.call("rbind", Map(function(n, r) c(rmultinom(1, size = n, prob = r)),
+             n, split(input$r_prob$type, 1:nrow(input$r_prob$type))))
+  colnames(ngx) <-(input$ln$X_names) # treatment randomization (subtypes)
   # which treatment has been assigned to the control
-  n_ctr <- lapply(ngx[, "Control"], function(ni) c(rmultinom(1, size = ni, prob = input$p_ctr))) %>%
-    do.call("rbind", .) %>% `colnames<-`(names(input$p_ctr))
+  n_ctr <- do.call("rbind", lapply(ngx[, "Control"], function(ni) c(rmultinom(1, size = ni, prob = input$p_ctr))))
+  colnames(n_ctr) <-(names(input$p_ctr))
 
   Tilist <- Map(function(m, n){ # simulate real PFS time
     #rweibull(n, shape = sim_thld$shape, scale = 1/m^(1/sim_thld$shape))
