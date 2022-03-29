@@ -255,23 +255,36 @@ generate_data <- function(effect = "nonlinear", Zeffect = 0, Ueffect = 0,
 
   UU <- rnorm(64)
 
-  if(Zeffect) Zeff <- .25 else Zeff <- 0
-  if(Ueffect) Ueff <- .25 else Ueff <- 0
+  #if(Zeffect) Zeff <- .25 else Zeff <- 0
+  #if(Ueffect) Ueff <- .25 else Ueff <- 0
 
   if(effect == "nonlinear") {
 
     sbeff <- bs(seff, knots = c(-1, 0, 1), degree = 1, Boundary.knots = c(-8, 8))
     yeff <- -1 + sbeff %*% c(-.05, .6, 3, 3.5) +
-      + Zeff * abs(trtZ) + Ueff * UU
+      + Zeffect * abs(trtZ) + Ueffect * UU
     #plot(yeff ~ seff)
 
   } else if(effect == "linear") {
 
-    yeff <- -1 + seff * 1 + Zeff * abs(trtZ) + Ueff * UU
+    yeff <- -1 + seff * 1 + Zeffect * abs(trtZ) + Ueffect * UU
 
   } else if(effect == "null") {
 
-    yeff <- 0 + Zeff * abs(trtZ) + Ueff * UU
+    yeff <- 0 + Zeffect * abs(trtZ) + Ueffect * UU
+
+  } else if(effect == "inter") {
+
+    yeff <- ifelse(trtZ < 0, 0, 1) * seff + Ueffect * UU
+
+  } else if(effect == "interhide") {
+
+    yeff <- ifelse(UU < 0, 0, 1) * seff + Zeffect * trtZ
+
+  } else if(effect == "onetrt") {
+
+    trttmp <- rep(input$ln$X_names[-1],  each = 16)
+    yeff <- ifelse(trttmp == "ARSi", 1, 0) * seff + Zeffect * trtZ + Ueffect * UU
 
   }
 

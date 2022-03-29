@@ -153,3 +153,10 @@ When $\gamma_1 = \gamma_2 = 0.25$, we have the following relationship:
 idat <- generate_data(effect = "null", Zeffect = TRUE, Ueffect = TRUE)
 summary_scenario(idat)
 ```
+
+# Interaction 
+
+```{r inter}
+idat <- generate_data(effect = "inter", Zeffect = 0, Ueffect = 0)
+summary_scenario(idat)
+```

@@ -4,7 +4,7 @@ author: "Michael Sachs"
 date: "1/26/2022"
 output: html_document
 params: 
-    path: "sim-res/res-nonlin-take2-0-0-001.rds"
+    path: "sim-res/runout-nonlinear-0.0-0.0_01.rds"
 ---
 
 ```{r setup, include=FALSE}
@@ -41,7 +41,7 @@ summary_scenario <- function(teff) {
   
   res1 <- readRDS(params$path)
   res1$trueeffects$group <- as.numeric(factor(res1$trueeffects$J))
-  res1$leaveouts <- do.call(rbind, res1$leaveouts)
+  #res1$leaveouts <- do.call(rbind, res1$leaveouts)
 
 ```
 

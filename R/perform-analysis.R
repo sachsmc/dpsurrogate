@@ -176,20 +176,14 @@ run_one_analysis <- function(boo, niter = 50) {
                                yeff = res.y[j, ]))
     dmatin <- cbind(newdmat, boo$rdat$trtZ)
     dp <- ChangeObservations(dp, dmatin)
-    dpTry <- tryCatch(Fit(dp, 50, progressBar = FALSE),
-                      error = function(e) "singular")
-    if(identical(dpTry, "singular")) {
-      next
-    } else {
-      dp <- dpTry
-    }
+    dp <- Fit(dp, 50, progressBar = FALSE)
     dp <- UpdateAlpha(dp)
 
     #cat(j, "\n")
   }
 
   list(res.s = res.s, res.y = res.y, jags.state = init.l,
-       clusters = dp$clusterLabels)
+       clusters = dp)
 
 }
 
@@ -310,7 +304,7 @@ run_one_loo <- function(boo, lout, niter = 50, jags.state = NULL) {
                                yeff = res.y[j, ]))
     dmatin <- cbind(newdmat, boo$rdat$trtZ)
     dp <- ChangeObservations(dp, dmatin)
-
+    dp <- Fit(dp, 10, progressBar = FALSE)
     # dpTry <- tryCatch(Fit(dp, 10, progressBar = FALSE),
     #                   error = function(e) "singular")
     # if(identical(dpTry, "singular")) {
@@ -499,13 +493,7 @@ run_one_loo_null <- function(boo, lout, niter = 50, jags.state = NULL) {
       yeff = res.y[j, ]))
     dmatin <- cbind(newdmat, boo$rdat$trtZ)
     dp <- ChangeObservations(dp, dmatin)
-    dpTry <- tryCatch(Fit(dp, 10, progressBar = FALSE),
-                      error = function(e) "singular")
-    if(identical(dpTry, "singular")) {
-      next
-    } else {
-      dp <- dpTry
-    }
+    dp <- Fit(dp, 10, progressBar = FALSE)
     dp <- UpdateAlpha(dp)
 
     #cat(j, "\n")

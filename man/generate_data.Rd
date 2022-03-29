@@ -4,10 +4,24 @@
 \alias{generate_data}
 \title{Generate trial and individual-level data}
 \usage{
-generate_data(effect = "nonlinear", Zeffect = FALSE, Ueffect = FALSE)
+generate_data(
+  effect = "nonlinear",
+  Zeffect = 0,
+  Ueffect = 0,
+  Zgen = function(n) rnorm(n),
+  Sgen = function(n) rnorm(n, sd = 1.5)
+)
 }
 \arguments{
 \item{effect}{String indicating relationship between seff and yeff, can be "nonlinear", "linear", "null"}
+
+\item{Zeffect}{Strength of association between trial level covariates and outcome}
+
+\item{Ueffect}{Strength of association between random noise and outcome}
+
+\item{Zgen}{Function to generate Zeffects (sample from a distribution)}
+
+\item{Sgen}{Function to generate Seffects (sample from a distribution)}
 }
 \description{
 Generate trial and individual-level data

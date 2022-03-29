@@ -6,10 +6,10 @@
 \usage{
 run_one_replicate(
   effect = "nonlinear",
-  Zeffect = FALSE,
-  Ueffect = FALSE,
-  nnodes = 8,
-  niter = 50
+  Zeffect = 0,
+  Ueffect = 0,
+  niter = 50,
+  nnodes
 )
 }
 \description{
