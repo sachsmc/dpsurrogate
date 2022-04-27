@@ -45,7 +45,8 @@ update_priors <- function(dp, boo) {
       Sig <- dp$clusterParameters$sig[,, dp$clusterLabels[i]]
 
       newmu <- dp$clusterParameters$mu[, , dp$clusterLabels[i]][1:2] +
-        Sig[1:2,3] / Sig[3,3] * (boo$rdat$trtZ[i] - dp$clusterParameters$mu[, , dp$clusterLabels[i]][3])
+        Sig[1:2,3] / Sig[3,3] * (boo$rdat$trtZ[i] -
+                                   dp$clusterParameters$mu[, , dp$clusterLabels[i]][3])
 
       newsig <- Sig[1:2, 1:2] - Sig[1:2, 3] %*% solve(Sig[3, 3]) %*% Sig[3, 1:2]
 
@@ -90,7 +91,7 @@ update_priors <- function(dp, boo) {
 
 run_one_analysis <- function(boo, niter = 50) {
 
-  #boo <- generate_data()
+  #boo <- generate_data("manybiom")
 
   ldat <- boo$ldat
 
@@ -114,11 +115,14 @@ run_one_analysis <- function(boo, niter = 50) {
   mu0hat <- c(colSums(dmat[, -3] * boo$rdat$ngrp) / sum(boo$rdat$ngrp),
               mean(boo$rdat$trtZ))
 
-  v0hat <- c(colSums((dmat[, -3] - mu0hat[-3])^2 * boo$rdat$ngrp) / sum(boo$rdat$ngrp), var(boo$rdat$trtZ))
+  v0hat <- c(colSums((dmat[, -3] - mu0hat[-3])^2 * boo$rdat$ngrp) /
+               sum(boo$rdat$ngrp), var(boo$rdat$trtZ))
+
+  lambase <- diag(1 / v0hat)
 
   basepriors <- list(mu0 = mu0hat,
-                     Lambda = diag(v0hat) * 4,
-                     kappa0 = ncol(dmat),
+                     Lambda = lambase,
+                     kappa0 =  1 / 64,
                      nu = ncol(dmat))
 
   dp <- DirichletProcessMvnormal(dmat,
@@ -192,7 +196,7 @@ run_one_analysis <- function(boo, niter = 50) {
 
 run_one_loo <- function(boo, lout, niter = 50, jags.state = NULL) {
 
-  #boo <- generate_data(effect = "null")
+  #boo <- generate_data(effect = "manybiom")
 
   ldat <- boo$ldat
   subtypes <- levels(ldat$J)
@@ -219,12 +223,15 @@ run_one_loo <- function(boo, lout, niter = 50, jags.state = NULL) {
   mu0hat <- c(colSums(dmat[, -3] * boo$rdat$ngrp) / sum(boo$rdat$ngrp),
               mean(boo$rdat$trtZ))
 
-  v0hat <- c(colSums((dmat[, -3] - mu0hat[-3])^2 * boo$rdat$ngrp) / sum(boo$rdat$ngrp), var(boo$rdat$trtZ))
+  v0hat <- c(colSums((dmat[, -3] - mu0hat[-3])^2 * boo$rdat$ngrp) /
+               sum(boo$rdat$ngrp), var(boo$rdat$trtZ))
+
+  lambase <- diag(1 / v0hat)
 
   basepriors <- list(mu0 = mu0hat,
-                   Lambda = diag(v0hat) * 4,
-                   kappa0 = ncol(dmat),
-                   nu = ncol(dmat))
+                     Lambda = lambase,
+                     kappa0 = 1 / 64,
+                     nu = ncol(dmat))
 
   dp <- DirichletProcessMvnormal(dmat,
                                  g0Priors = basepriors,
@@ -290,15 +297,7 @@ run_one_loo <- function(boo, lout, niter = 50, jags.state = NULL) {
     res.s[j, ] <- as.matrix(tsam$beta_s[-c(1:16), dim(tsam$beta_s)[2], 1])
     res.y[j, ] <- as.matrix(tsam$beta_y[-c(1:16), dim(tsam$beta_y)[2], 1])
 
-    ld <- lout + 16
-    res.y[j, lout]  <- rnorm(1, mean = prior.mu[ld,2] +
-                               sqrt(prior.sig[2,2,ld])/sqrt(prior.sig[1,1,ld]) *
-                               prior.sig[1,2,ld] / (sqrt(prior.sig[2,2,ld]) *
-                                                      sqrt(prior.sig[1,1,ld])) *
-                               (res.s[j,lout] - prior.mu[ld,1]),
-                             sd = (1 - prior.sig[1,2,ld] /
-                                     (sqrt(prior.sig[2,2,ld]) * sqrt(prior.sig[1,1,ld]))) *
-                               sqrt(prior.sig[2,2,ld]) )
+
 
     newdmat <- as.matrix(cbind(seff = res.s[j, ],
                                yeff = res.y[j, ]))
@@ -314,6 +313,16 @@ run_one_loo <- function(boo, lout, niter = 50, jags.state = NULL) {
     # }
 
     dp <- UpdateAlpha(dp)
+
+    dpmu <- dp$clusterParameters$mu[,, dp$clusterLabels[lout]]
+    dpsig <- dp$clusterParameters$sig[,, dp$clusterLabels[lout]]
+
+    ppmu <- dpmu[2] + (dpsig[c(2), c(1, 3)] %*% solve(dpsig[c(1,3), c(1,3)])) %*%
+      (rbind(res.s[j,lout], boo$rdat$trtZ[lout]) - t(t(dpmu[c(1,3)])))
+    ppsig <- sqrt(c(dpsig[2, 2] - dpsig[c(2), c(1, 3)] %*%
+                      solve(dpsig[c(1,3), c(1,3)]) %*% dpsig[c(1, 3), c(2)]))
+
+    res.y[j, lout]  <- rnorm(1, mean = ppmu, sd = ppsig)
 
     #cat(j, "\n")
   }
@@ -486,8 +495,6 @@ run_one_loo_null <- function(boo, lout, niter = 50, jags.state = NULL) {
     }
 
     res.y[j, ] <- as.matrix(tsam$beta_y[-c(1:16), dim(tsam$beta_y)[2], 1])
-    res.y[j, lout] <- rnorm(1, mean = prior.mu[lout + 16],
-                            sd = prior.sig[lout + 16])
 
     newdmat <- as.matrix(cbind(
       yeff = res.y[j, ]))
@@ -495,6 +502,17 @@ run_one_loo_null <- function(boo, lout, niter = 50, jags.state = NULL) {
     dp <- ChangeObservations(dp, dmatin)
     dp <- Fit(dp, 10, progressBar = FALSE)
     dp <- UpdateAlpha(dp)
+
+    dpmu <- dp$clusterParameters$mu[,, dp$clusterLabels[lout]]
+    dpsig <- dp$clusterParameters$sig[,, dp$clusterLabels[lout]]
+
+    dprho <- dpsig[1, 2] / sqrt(dpsig[1,1] * dpsig[2,2])
+
+    ppmu <- dpmu[1] + sqrt(dpsig[c(1), c(1)] / (dpsig[c(2), c(2)])) *
+      dprho * (boo$rdat$trtZ[lout] - dpmu[c(2)])
+    ppsig <- sqrt((1 - dprho^2) * dpsig[1, 1])
+
+    res.y[j, lout]  <- rnorm(1, mean = ppmu, sd = ppsig)
 
     #cat(j, "\n")
   }

@@ -13,7 +13,7 @@ generate_data(
 )
 }
 \arguments{
-\item{effect}{String indicating relationship between seff and yeff, can be "nonlinear", "linear", "null"}
+\item{effect}{String indicating relationship between seff and yeff, can be "nonlinear", "linear", "null", etc}
 
 \item{Zeffect}{Strength of association between trial level covariates and outcome}
 

@@ -1,6 +1,6 @@
 #' Generate trial and individual-level data
 #' @export
-#' @param effect String indicating relationship between seff and yeff, can be "nonlinear", "linear", "null"
+#' @param effect String indicating relationship between seff and yeff, can be "nonlinear", "linear", "null", etc
 #' @param Zeffect Strength of association between trial level covariates and outcome
 #' @param Ueffect Strength of association between random noise and outcome
 #' @param Zgen Function to generate Zeffects (sample from a distribution)
@@ -255,8 +255,6 @@ generate_data <- function(effect = "nonlinear", Zeffect = 0, Ueffect = 0,
 
   UU <- rnorm(64)
 
-  #if(Zeffect) Zeff <- .25 else Zeff <- 0
-  #if(Ueffect) Ueff <- .25 else Ueff <- 0
 
   if(effect == "nonlinear") {
 
@@ -268,6 +266,10 @@ generate_data <- function(effect = "nonlinear", Zeffect = 0, Ueffect = 0,
   } else if(effect == "linear") {
 
     yeff <- -1 + seff * 1 + Zeffect * abs(trtZ) + Ueffect * UU
+
+  } else if(effect == "simple") {
+
+    yeff <- -1 + seff * 1 + Zeffect * trtZ + Ueffect * UU
 
   } else if(effect == "null") {
 
@@ -285,6 +287,30 @@ generate_data <- function(effect = "nonlinear", Zeffect = 0, Ueffect = 0,
 
     trttmp <- rep(input$ln$X_names[-1],  each = 16)
     yeff <- ifelse(trttmp == "ARSi", 1, 0) * seff + Zeffect * trtZ + Ueffect * UU
+
+  } else if(effect == "twotrt") {
+
+    trttmp <- rep(input$ln$X_names[-1],  each = 16)
+    trtZ <- rnorm(64, ifelse(trttmp == "ARSi", -2, ifelse(trttmp == "Taxane_CT", 2, 0)))
+    yeff <- ifelse(trttmp %in% c("ARSi", "Taxane_CT"), seff - min(seff), 0) +
+      Zeffect * trtZ + Ueffect * UU
+
+  } else if(effect == "manybiom") {
+
+    biomtmp <- rep(input$ln$names_type, 4)
+    biomnum <- as.numeric(as.factor(biomtmp))
+
+    biocut <- as.numeric(cut(biomnum, c(0, 6, 11, 16), right = TRUE))
+
+    seff <- rnorm(64, mean = c(-1, 2, 0)[biocut], sd = .75)
+
+    trtZ <- rnorm(64, mean = biocut - 2, sd = .25)
+
+    yeff <- ifelse(biocut == 1,  .75 * seff^2 + min(seff) + 4,
+                   ifelse(biocut == 2, 2 * seff + min(seff) - 2,
+                          0)) +
+      Zeffect * trtZ + Ueffect * UU
+
 
   }
 

@@ -52,7 +52,10 @@ as.data.frame(out1)
 
 }
 
-allres <- lapply(list.files("tests/sim-res/", "*.rds"), function(d) {
+filelist <- list.files("tests/sim-res/", "*.rds")
+filelist <- grep("manybiom|simple", filelist, value = TRUE)
+
+allres <- lapply(filelist, function(d) {
   tryCatch(summarize_sim(d), error = function(e) e)
   })
 

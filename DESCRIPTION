@@ -1,7 +1,7 @@
 Package: dpsurrogate
 Type: Package
 Title: Methods and Simulation Studies for Nonparametric Hierarchical Bayesian Analysis of Surrogate Endpoints
-Version: 0.2.4
+Version: 0.2.9
 Author: Michael C Sachs
 Maintainer: Michael C Sachs <sachsmc@gmail.com>
 Description: More about what it does (maybe more than one line)
