@@ -3,11 +3,11 @@ library(ggplot2)
 library(patchwork)
 library(dpsurrogate)
 
-res1 <- readRDS("tests/runout-manybiom-0.0-0.0_00.rds")
-res2 <- readRDS("tests/runout-onetrt-0.0-0.0_00.rds")
+res1 <- readRDS("tests/sim-res/runout-twotrt-0.0-0.0_01.rds")
+res2 <- readRDS("tests/sim-res/runout-manybiom-0.0-0.0_00.rds")
 
-name1 <- "Good for many biomarkers"
-name2 <- "Good for two treatments"
+name1 <- "Good for two treatments"
+name2 <- "Differential by biomarker"
 
 res1$trueeffects$group <- as.numeric(factor(res1$trueeffects$J))
 
@@ -22,6 +22,8 @@ getAvgCluster <- function(res1) {
                3, mean)
   res1$clusters$labelsChain[[which.min(sse)]]
 }
+
+
 
 res1$trueeffects$cluster <- factor(getAvgCluster(res1))
 
@@ -46,7 +48,7 @@ ests2 <- merge(ests2, res2$trueeffects, by.x = "leftout", by.y = "group")
 
 
 p1 <- ggplot(ests, aes(x = seff, y = yeff, xend = seff, yend = dpsur)) +
-  geom_density2d(data = tmp1, aes(x = seff, y = dpsur, color = cluster), h = c(2,2)) +
+  geom_density2d(data = tmp1, aes(x = seff, y = dpsur, color = cluster)) +
   geom_segment(color = "grey85") +
   geom_point() +
   geom_point(aes(x = seff, y = dpsur, color = cluster)) +
@@ -109,7 +111,7 @@ p32 <- ggplot(ests2, aes(x = seff, y = yeff, xend = seff, yend = simple)) +
 p1 + p12 +  p3 + p32 + p2 + p22 +plot_layout(ncol = 2)
 
 
-ggsave("preds-median-onetrt-new.png", width = 7.5, height = 9.75)
+ggsave("preds-median-twotrt.png", width = 7.5, height = 9.75)
 
 
 cheez <-  merge(res1$leaveouts, res1$trueeffects, by.x = "leftout", by.y = "group")
@@ -136,7 +138,7 @@ q2 <- data.frame(err = c(cheez2$D, cheez2$D0, cheez2$Ds),
   xlim(c(0,10)) + ggtitle(name2)
 
 q1 + q2 + plot_layout(ncol = 1, guides = "collect")
-ggsave("D-density-onetrt.png", width = 6.5, height = 6.5)
+ggsave("D-density-twotrt.png", width = 6.5, height = 6.5)
 
 cheez2$trt <- sapply(strsplit(cheez2$J, ":"), "[", 2)
 cheez2$genome <- sapply(strsplit(cheez2$J, ":"), "[", 1)
@@ -166,10 +168,11 @@ ggplot(ests, aes(x = seff, y = yeff, xend = seff, yend = dpsur)) +
 
 
 
-ggplot( cbind(cheez2, setting = "Two treatments"),
+ggplot( rbind(cbind(cheez, setting = name1),
+              cbind(cheez2, setting = name2)),
              aes(x = D, color = factor(cluster))) + geom_density() +
   theme_bw() + xlab("Absolute error") + facet_wrap(~ setting, ncol = 1) +
-  ggtitle("by cluster") + guides(color = "none")
+  ggtitle("by cluster") + guides(color = "none") + xlim(c(0,10))
 
-ggsave("d-dens-by-cluster-onetrt-new.png", width = 5.25, height = 4.25)
+ggsave("d-dens-by-cluster-twotrt.png", width = 5.25, height = 4.25)
 

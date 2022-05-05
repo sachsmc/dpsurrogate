@@ -21,6 +21,12 @@ summarize_sim <- function(path) {
   res1$trueeffects$group <- as.numeric(factor(res1$trueeffects$J))
   clusters <- getAvgCluster(res1)
 
+  clap <- unlist(lapply(1:64, function(i) {
+    thisc <- res1$trueeffects$trueclusters[i]
+    cdex <- which(res1$trueeffects$trueclusters == thisc)
+    mean(res1$clusteri[[i]][50, i] == res1$clusteri[[i]][50, cdex])
+    }))
+
 ssize <- quantile(res1$trueeffects$ngrp, c(0, .25, .5, .75, 1))
 # P(D_a > D_0)
 
@@ -44,7 +50,8 @@ out1 <- as.list(c(  ssize,
   p.simp = mean(tmp$D.simp < tmp$D.null),
   p.dpm.true = mean(tmp1$D.dpm < tmp1$D.null),
   p.simp.true = mean(tmp1$D.simp < tmp1$D.null),
-  nclusters = length(unique(clusters))
+  nclusters = length(unique(clusters)),
+  cluster.olap = mean(clap)
 ))
 
 out1$setting <- setting
@@ -53,7 +60,7 @@ as.data.frame(out1)
 }
 
 filelist <- list.files("tests/sim-res/", "*.rds")
-filelist <- grep("manybiom|simple", filelist, value = TRUE)
+#filelist <- grep("manybiom|simple", filelist, value = TRUE)
 
 allres <- lapply(filelist, function(d) {
   tryCatch(summarize_sim(d), error = function(e) e)
@@ -72,7 +79,8 @@ df <- data.table(df)
 colnames(df) <- c("min", "Q1", "median", "Q3", "max",
                   "median.D.dpm.est", "median.D.simp.est", "median.D.null.est",
                   "median.D.dpm.true", "median.D.simp.true", "median.D.null.true",
-                  "p.dpm", "p.simp", "p.dpm.true", "p.simp.true","nclusters", "setting")
+                  "p.dpm", "p.simp", "p.dpm.true", "p.simp.true","nclusters",
+                  "cluster.olap", "setting")
 
 
 print(xtable(df[, .(mean(min), mean(Q1), mean(median), mean(Q3), mean(max)), by = .(setting)],
@@ -85,7 +93,8 @@ msd <- function(x) {
 
 }
 
-print(xtable(df[, .(msd(median.D.dpm.est), msd(median.D.simp.est), msd(median.D.dpm.true),
+print(xtable(df[, .(msd(cluster.olap),
+                    msd(median.D.dpm.est), msd(median.D.simp.est), msd(median.D.dpm.true),
                     msd(median.D.simp.true)), by = .(setting)],
              digits = 2),
       include.rownames = FALSE, sanitize.text.function = \(x) x)

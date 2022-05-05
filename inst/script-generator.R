@@ -5,15 +5,16 @@ module load R/4.1.2
 module load jags/4.3.0
 
 SCEN=%s
+pid=$$
 
 for i in {0..%.0f}
 do
-srun -n1 Rscript setup-generate.R $i $SCEN %.1f %.1f
-RES=$(sbatch --parsable --array=1-64 --wrap="Rscript oneout.R $i $SCEN %.1f %.1f")
+srun -n1 Rscript setup-generate.R $i $SCEN %.1f %.1f $pid
+RES=$(sbatch --parsable --array=1-64 --wrap="Rscript oneout.R $i $SCEN %.1f %.1f $pid")
 echo $RES
-srun --dependency=afterok:$RES -n1 Rscript cleanup.R $i $SCEN %.1f %.1f
+srun --dependency=afterok:$RES -n1 Rscript cleanup.R $i $SCEN %.1f %.1f $pid
 printf -v j "%%02d" $i
-rm -r tmp$SCEN-%.1f-%.1f_$j/
+rm -r tmp$pid-$SCEN-%.1f-%.1f_$j/
 rm *.out
 done
 '

@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 ```{r setup, message = FALSE, warning = FALSE}
 library(dpsurrogate)
 library(splines)
+library(knitr)
 
 summary_scenario <- function(idat) {
   par(mfrow = c(2, 2))
@@ -39,124 +40,44 @@ summary_scenario <- function(idat) {
 
 We start by generating $\nu_j, Z_j, U_j$ for $j = 1, \ldots, 64$ all from independent standard normal distributions. Recall that $\nu_j$ represents the treatment effect on the potential surrogate in group $i$, and $Z_j$ is an observed treatment-level covariate, and $U_i$ is an unobserved treatment-level covariate. We consider the following scenarios for generation of $\mu_j$, the treatment effect on the clinical outcome. 
 
-
-## Nonlinear
-
-$$\mu_j = 1 - \sum_{i = 1}^4 \beta_i B_i(\nu_j) - \gamma_1 |Z_j| - \gamma_2 U_j,$$
-
-where $B_i(\cdot), i = 1, \ldots, 4$ is a linear B-spline basis with knots at $-1, 0, 1$, $\beta = (0, .6, 3, 5)$. 
-
-When $\gamma_1 = \gamma_2 = 0$, we have the following relationship:
-
-```{r nonlin00}
-idat <- generate_data(effect = "nonlinear", Zeffect = FALSE, Ueffect = FALSE)
-summary_scenario(idat)
-```
-
-
-When $\gamma_1 = 0.25, \gamma_2 = 0$, we have the following relationship:
-
-```{r nonlin10}
-idat <- generate_data(effect = "nonlinear", Zeffect = TRUE, Ueffect = FALSE)
-summary_scenario(idat)
-```
-
-
-When $\gamma_1 = 0, \gamma_2 = 0.25$, we have the following relationship:
-
-```{r nonlin01}
-idat <- generate_data(effect = "nonlinear", Zeffect = FALSE, Ueffect = TRUE)
-summary_scenario(idat)
-```
-
-
-
-When $\gamma_1 = \gamma_2 = 0.25$, we have the following relationship:
-
-```{r nonlin11}
-idat <- generate_data(effect = "nonlinear", Zeffect = TRUE, Ueffect = TRUE)
-summary_scenario(idat)
-```
-
-
-## Linear
-
-
-$$\mu_j = 1 - 1 \nu_j - \gamma_1 |Z_j| - \gamma_2 U_j.$$
-
-
-When $\gamma_1 = \gamma_2 = 0$, we have the following relationship:
-
-```{r lin00}
-idat <- generate_data(effect = "linear", Zeffect = FALSE, Ueffect = FALSE)
-summary_scenario(idat)
-```
-
-
-When $\gamma_1 = 0.25, \gamma_2 = 0$, we have the following relationship:
-
-```{r lin10}
-idat <- generate_data(effect = "linear", Zeffect = TRUE, Ueffect = FALSE)
-summary_scenario(idat)
-```
-
-
-When $\gamma_1 = 0, \gamma_2 = 0.25$, we have the following relationship:
-
-```{r lin01}
-idat <- generate_data(effect = "linear", Zeffect = FALSE, Ueffect = TRUE)
-summary_scenario(idat)
-```
-
-
-
-When $\gamma_1 = \gamma_2 = 0.25$, we have the following relationship:
-
-```{r lin11}
-idat <- generate_data(effect = "linear", Zeffect = TRUE, Ueffect = TRUE)
-summary_scenario(idat)
-```
-
-## Null
-
-
-$$\mu_j = 0 - 0 \nu_j - \gamma_1 |Z_j| - \gamma_2 U_j.$$
-
-When $\gamma_1 = \gamma_2 = 0$, we have the following relationship:
-
-```{r null00}
-idat <- generate_data(effect = "null", Zeffect = FALSE, Ueffect = FALSE)
-summary_scenario(idat)
-```
-
-
-When $\gamma_1 = 0.25, \gamma_2 = 0$, we have the following relationship:
-
-```{r null10}
-idat <- generate_data(effect = "null", Zeffect = TRUE, Ueffect = FALSE)
-summary_scenario(idat)
-```
-
-
-When $\gamma_1 = 0, \gamma_2 = 0.25$, we have the following relationship:
-
-```{r null01}
-idat <- generate_data(effect = "null", Zeffect = FALSE, Ueffect = TRUE)
-summary_scenario(idat)
-```
-
-
-
-When $\gamma_1 = \gamma_2 = 0.25$, we have the following relationship:
-
-```{r null11}
-idat <- generate_data(effect = "null", Zeffect = TRUE, Ueffect = TRUE)
-summary_scenario(idat)
-```
-
-# Interaction 
+- Nonlinear (nonlinear): $\mu_j = -1 + f(\nu_j) + c_z |Z_j| + c_u U_j$, where $f$ is a linear spline basis with knots at $-1, 0, 1$ and coefficients chosen so that the trend is monotonically increasing.
+- Linear (linear): $\mu_j = -1 + 1* \nu_j + c_z |Z_j| + c_u U_j$.
+- Simple (simple): $\mu_j = -1 + 1* \nu_j + c_z Z_j + c_u U_j$.
+- Null (null): $\mu_j = -1 +  c_z |Z_j| + c_u U$.
+- Interaction (inter): $\mu_j = 1\{Z_j < 0\} * \nu_j + c_u U_j$, where $1\{\cdot\}$ is the - r function. 
+- Hidden interaction (interhide): $\mu_j = 1\{U_j < 0\} * \nu_j + c_z Z_j$. 
+- Surrogate value for only 1 treatment (onetrt): $\mu_j = 1\{j\in R_a\} * \nu_j + c_z Z_j + c_u U_j$ where $R_a$ is the set of indices such that the active treatment is treatment A.
+- Surrogate value for 2 treatments (twotrt): $\mu_j = 1\{j\in (R_a, R_b)\} * (\nu_j - \min_j(\nu_j)) + c_z Z_j + c_u U_j$ where $R_a, R_b$ are the sets of indices such that the active treatment is treatment A and B, respectively. Additionally, the mean of $Z_j$ is changed to vary based on the treatment group (with different means in each of the 4 groups). 
+- Surrogate value for multiple biomarkers (manybiom): The biomarker groups are grouped into 3 categories $B^*_j \in \{1, 2, 3\}$ of size 20, 28, 16, respectively. Then $Z_j \sim N(B^*_j - 1, 0.5^2)$ and $\mu_j = 0.25 \cdot (B^*_j - 3) \cdot (\nu_j - \min_j(\nu_j)) + c_z Z_j + c_u U_j$. In this setting, the three biomarker groups have differential surrogate value none, moderate, and strong. 
 
 ```{r inter}
-idat <- generate_data(effect = "inter", Zeffect = 0, Ueffect = 0)
-summary_scenario(idat)
+
+
+settings <- rbind(data.frame(scen = c("nonlinear", "linear", "simple", 
+                                      "null", "inter", "interhide",
+                    "onetrt", "twotrt", "manybiom"),
+           num = 99, p1 = 0, p2 = 0),
+      data.frame(scen = c("nonlinear", "linear", "simple"),
+                 num = 99, p1 = 0.3, p2 = 0),
+      data.frame(scen = c("nonlinear", "linear", "simple"),
+                 num = 99, p1 = 0.3, p2 = 0.3),
+      data.frame(scen = c("inter"),
+                 num = 99, p1 = 0, p2 = 0.3),
+      data.frame(scen = c("interhide"),
+                 num = 99, p1 = 0.3, p2 = 0))
+
+settings$fname <- gsub(".", "", make.names(settings$scen, 
+                                           unique = TRUE), fixed = TRUE)
+
+for(i in 1:nrow(settings)){
+  idat <- generate_data(effect = settings$scen[i], Zeffect = settings$p1[i], 
+                        Ueffect = settings$p2[i])
+  header <- sprintf("# Setting: %s, $c_z = %.1f, c_u = %.1f$ \n\n", 
+              settings$scen[i], settings$p1[i], 
+              settings$p2[i])
+  cat(header)
+  summary_scenario(idat)
+  
+}
+
 ```

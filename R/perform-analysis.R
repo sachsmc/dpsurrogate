@@ -243,7 +243,7 @@ run_one_loo <- function(boo, lout, niter = 50, jags.state = NULL) {
 
   #niter <- 50
 
-  res.s <- res.y <- matrix(NA, nrow = niter, ncol = 64)
+  res.s <- res.y <- cluster.i <- matrix(NA, nrow = niter, ncol = 64)
 
   for(j in  1:niter){
 
@@ -324,10 +324,11 @@ run_one_loo <- function(boo, lout, niter = 50, jags.state = NULL) {
 
     res.y[j, lout]  <- rnorm(1, mean = ppmu, sd = ppsig)
 
+    cluster.i[j, ] <- dp$clusterLabels
     #cat(j, "\n")
   }
 
-  list(res.s = res.s[, lout], res.y = res.y[, lout])
+  list(res.s = res.s[, lout], res.y = res.y[, lout], clusters = cluster.i)
 
 }
 

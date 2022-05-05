@@ -262,31 +262,38 @@ generate_data <- function(effect = "nonlinear", Zeffect = 0, Ueffect = 0,
     yeff <- -1 + sbeff %*% c(-.05, .6, 3, 3.5) +
       + Zeffect * abs(trtZ) + Ueffect * UU
     #plot(yeff ~ seff)
+    trueclusters <- as.numeric(cut(seff, c(-8, -1, 0, 1, 8)))
 
   } else if(effect == "linear") {
 
     yeff <- -1 + seff * 1 + Zeffect * abs(trtZ) + Ueffect * UU
+    trueclusters <- rep(1, length(yeff))
 
   } else if(effect == "simple") {
 
     yeff <- -1 + seff * 1 + Zeffect * trtZ + Ueffect * UU
+    trueclusters <- rep(1, length(yeff))
 
   } else if(effect == "null") {
 
     yeff <- 0 + Zeffect * abs(trtZ) + Ueffect * UU
+    trueclusters <- rep(1, length(yeff))
 
   } else if(effect == "inter") {
 
     yeff <- ifelse(trtZ < 0, 0, 1) * seff + Ueffect * UU
+    trueclusters <- ifelse(trtZ < 0, 1, 2)
 
   } else if(effect == "interhide") {
 
     yeff <- ifelse(UU < 0, 0, 1) * seff + Zeffect * trtZ
+    trueclusters <- ifelse(UU < 0, 1, 2)
 
   } else if(effect == "onetrt") {
 
     trttmp <- rep(input$ln$X_names[-1],  each = 16)
     yeff <- ifelse(trttmp == "ARSi", 1, 0) * seff + Zeffect * trtZ + Ueffect * UU
+    trueclusters <- ifelse(trttmp == "ARSi", 1, 2)
 
   } else if(effect == "twotrt") {
 
@@ -294,6 +301,9 @@ generate_data <- function(effect = "nonlinear", Zeffect = 0, Ueffect = 0,
     trtZ <- rnorm(64, ifelse(trttmp == "ARSi", -2, ifelse(trttmp == "Taxane_CT", 2, 0)))
     yeff <- ifelse(trttmp %in% c("ARSi", "Taxane_CT"), seff - min(seff), 0) +
       Zeffect * trtZ + Ueffect * UU
+
+    trueclusters <- ifelse(trttmp %in% c("ARSi", "Taxane_CT"), 1, 2)
+
 
   } else if(effect == "manybiom") {
 
@@ -311,6 +321,7 @@ generate_data <- function(effect = "nonlinear", Zeffect = 0, Ueffect = 0,
                           0)) +
       Zeffect * trtZ + Ueffect * UU
 
+    trueclusters <- biocut
 
   }
 
@@ -378,7 +389,8 @@ generate_data <- function(effect = "nonlinear", Zeffect = 0, Ueffect = 0,
     seff = -seff,
     yeff = -yeff,
     trtZ = trtZ,
-    J = J
+    J = J,
+    trueclusters = trueclusters
   )
   tenn <- table(ldat$J)
   rdat <- merge(rdat, data.frame(ngrp = as.vector(tenn), J = names(tenn)), by = "J")
