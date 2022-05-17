@@ -1,4 +1,4 @@
-# Reproducibility materials for "Nonparametric evaluation of surrogacy in Bayesian adaptive platform studies"
+# Reproducibility materials for "Flexible Evaluation of Surrogacy in Bayesian Adaptive Platform Studies"
 ## Authors: Michael C Sachs and Erin E Gabriel and Alessio Crippa and Michael J Daniels
 
 ## Contents
