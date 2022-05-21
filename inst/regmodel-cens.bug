@@ -14,23 +14,30 @@ model {
   mu_s <- X %*% beta_s
   mu_y <- X %*% beta_y
 
-  for(i in 1:N){
+  for(i in OO) {
+    s[i] ~ dnorm(mu_s[i], tau_s)
+    y[i] ~ dnorm(mu_y[i], tau_y)
+  }
+
+  for(i in JJ){
 
     s[i] ~ dnorm(mu_s[i], tau_s)
 
     t[i] <- exp(y[i])
-
     is.censored[i] ~ dinterval(t[i],t.cen[i])
     y[i] ~ dnorm(mu_y[i], tau_y)
+    t.cen[i] ~ dlnorm(mu_y[i], tau_y2)
 
   }
 
 
 
   tau_y <- pow(sigma_y, -2)
+  tau_y2 <- pow(sigma_y2, -2)
   tau_s <- pow(sigma_s, -2)
 
   sigma_y ~ dgamma(1, 1)
+  sigma_y2 ~ dgamma(1, 1)
   sigma_s ~ dgamma(1, 1)
 
 }
