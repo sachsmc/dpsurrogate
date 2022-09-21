@@ -21,11 +21,11 @@ run_one_simple_analysis <- function(boo, niter = 50) {
 
     test_data <- list(J = ncol(Xmat),
                       N = nrow(Xmat),
-                      y = logYY,
-                      s = SS,
+                      sy = cbind(SS, logYY),
                       X = Xmat,
                       Z = c(rep(0, 80 - 64), boo$rdat$trtZ),
-                      prior_sig = Sig)
+                      prior_sig = Sig,
+                      omega = c(2,2))
 
 
       tmod <- jags.model(system.file("normalmodel.bug", package = "dpsurrogate"),

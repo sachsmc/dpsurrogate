@@ -1,4 +1,4 @@
-var beta.t[J,2], beta_s[J], beta_y[J];
+var beta.t[J,2], beta_s[J], beta_y[J], muu[N,2];
 
 model {
 
@@ -11,22 +11,15 @@ model {
 
   }
 
-  mu_s <- X %*% beta_s
-  mu_y <- X %*% beta_y
+  muu[,1] <- X %*% beta_s
+  muu[,2] <- X %*% beta_y
 
   for(i in 1:N){
 
-    s[i] ~ dnorm(mu_s[i], tau_s)
-    y[i] ~ dnorm(mu_y[i], tau_y)
+    sy[i, 1:2] ~ dmnorm(muu[i,1:2], tau)
 
   }
 
-
-
-  tau_y <- pow(sigma_y, -2)
-  tau_s <- pow(sigma_s, -2)
-
-  sigma_y ~ dgamma(1, 1)
-  sigma_s ~ dgamma(1, 1)
+  tau ~ dscaled.wishart(omega, 4)
 
 }
