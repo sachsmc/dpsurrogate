@@ -53,24 +53,25 @@ We start by generating $\nu_j, Z_j, U_j$ for $j = 1, \ldots, 64$ all from indepe
 ```{r inter}
 
 
-settings <- rbind(data.frame(scen = c("nonlinear", "linear", "simple", 
+settings <- rbind(data.frame(scen = c("nonlinear", "nonlinearskew", "linear", "simple", "simplestrong",
                                       "null", "inter", "interhide",
                     "onetrt", "twotrt", "manybiom"),
            num = 99, p1 = 0, p2 = 0),
       data.frame(scen = c("nonlinear", "linear", "simple"),
                  num = 99, p1 = 0.3, p2 = 0),
-      data.frame(scen = c("nonlinear", "linear", "simple"),
+      data.frame(scen = c("nonlinear", "linear", "simple", "manybiom"),
                  num = 99, p1 = 0.3, p2 = 0.3),
-      data.frame(scen = c("inter"),
+      data.frame(scen = c("inter", "onetrt"),
                  num = 99, p1 = 0, p2 = 0.3),
-      data.frame(scen = c("interhide"),
+      data.frame(scen = c("interhide", "twotrt", "manybiom"),
                  num = 99, p1 = 0.3, p2 = 0))
 
-settings$fname <- gsub(".", "", make.names(settings$scen, 
-                                           unique = TRUE), fixed = TRUE)
+settings$fname <- gsub(".", "", make.names(settings$scen, unique = TRUE), fixed = TRUE)
+
 
 for(i in 1:nrow(settings)){
-  idat <- generate_data(effect = settings$scen[i], Zeffect = settings$p1[i], 
+  dscen <- if(settings$scen[i] == "nonlinearskew") "nonlinear" else settings$scen[i]
+  idat <- generate_data(effect = dscen, Zeffect = settings$p1[i], 
                         Ueffect = settings$p2[i])
   header <- sprintf("# Setting: %s, $c_z = %.1f, c_u = %.1f$ \n\n", 
               settings$scen[i], settings$p1[i], 
