@@ -9,7 +9,19 @@ library(dpsurrogate)
 
 niter <- 50
 
-idat <- generate_data(effect, Zeff, Ueff)
+if(effect == "nonlinearskew") {
+
+  library(sn)
+  idat <- generate_data(effect, Zeff, Ueff,
+                        Zgen = function(n) rsn(n, xi = 0, omega = 1, alpha = 1),
+                        Sgen = function(n) rsn(n, xi = 0, omega = 1.5, alpha = 1))
+
+} else {
+
+  idat <- generate_data(effect, Zeff, Ueff)
+}
+
+
 resall0 <- run_one_analysis(idat, niter = 50)
 resnull <- run_one_null(idat, niter = 50)
 ressimp <- run_one_simple_analysis(idat, niter = 50)

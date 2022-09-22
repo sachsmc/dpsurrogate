@@ -261,11 +261,11 @@ run_one_loo <- function(boo, lout, niter = 50, jags.state = NULL) {
 
     test_data <- list(J = ncol(Xmat),
                       N = nrow(Xmat),
-                      y = logYY,
-                      s = SS,
+                      sy = cbind(SS, logYY),
                       X = Xmat,
                       prior_mu = prior.mu,
-                      prior_sig = prior.sig)
+                      prior_sig = prior.sig,
+                      omega = c(2, 2))
 
     if(j == 1) {
 

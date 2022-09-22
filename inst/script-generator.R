@@ -24,16 +24,17 @@ makescpt <- function(scen, num, p1, p2, file) {
   cat(myscpt, file = file)
 }
 
-settings <- rbind(data.frame(scen = c("nonlinear", "linear", "simple", "null", "inter", "interhide",
+settings <- rbind(data.frame(scen = c("nonlinear", "nonlinearskew", "linear", "simple", "simplestrong",
+                                      "null", "inter", "interhide",
                     "onetrt", "twotrt", "manybiom"),
            num = 99, p1 = 0, p2 = 0),
       data.frame(scen = c("nonlinear", "linear", "simple"),
                  num = 99, p1 = 0.3, p2 = 0),
-      data.frame(scen = c("nonlinear", "linear", "simple"),
+      data.frame(scen = c("nonlinear", "linear", "simple", "manybiom"),
                  num = 99, p1 = 0.3, p2 = 0.3),
-      data.frame(scen = c("inter"),
+      data.frame(scen = c("inter", "onetrt"),
                  num = 99, p1 = 0, p2 = 0.3),
-      data.frame(scen = c("interhide"),
+      data.frame(scen = c("interhide", "twotrt", "manybiom"),
                  num = 99, p1 = 0.3, p2 = 0))
 
 settings$fname <- gsub(".", "", make.names(settings$scen, unique = TRUE), fixed = TRUE)

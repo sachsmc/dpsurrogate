@@ -274,6 +274,11 @@ generate_data <- function(effect = "nonlinear", Zeffect = 0, Ueffect = 0,
     yeff <- -1 + seff * 1 + Zeffect * trtZ + Ueffect * UU
     trueclusters <- rep(1, length(yeff))
 
+  } else if (effect == "simplestrong") {
+
+    yeff <- -1 + seff * 2 + Zeffect * trtZ + Ueffect * UU
+    trueclusters <- rep(1, length(yeff))
+
   } else if(effect == "null") {
 
     yeff <- 0 + Zeffect * abs(trtZ) + Ueffect * UU
