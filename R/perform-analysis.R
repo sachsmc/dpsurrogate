@@ -91,8 +91,7 @@ update_priors <- function(dp, boo) {
 
 run_one_analysis <- function(boo, niter = 50) {
 
-  load.module("glm", quiet = TRUE)
-  #boo <- generate_data("manybiom")
+ #boo <- generate_data("manybiom")
 
   ldat <- boo$ldat
 
@@ -152,11 +151,11 @@ run_one_analysis <- function(boo, niter = 50) {
 
     test_data <- list(J = ncol(Xmat),
                       N = nrow(Xmat),
-                      sy = cbind(SS, logYY),
+                      s = SS,
+                      y = logYY,
                       X = Xmat,
                       prior_mu = prior.mu,
-                      prior_sig = prior.sig,
-                      omega = c(2, 2))
+                      prior_sig = prior.sig)
 
     if(j == 1) {
       tmod <- jags.model(system.file("regmodel.bug", package = "dpsurrogate"), test_data, n.adapt = 100, quiet = TRUE)
@@ -261,11 +260,11 @@ run_one_loo <- function(boo, lout, niter = 50, jags.state = NULL) {
 
     test_data <- list(J = ncol(Xmat),
                       N = nrow(Xmat),
-                      sy = cbind(SS, logYY),
+                      s = SS,
+                      y = logYY,
                       X = Xmat,
                       prior_mu = prior.mu,
-                      prior_sig = prior.sig,
-                      omega = c(2, 2))
+                      prior_sig = prior.sig)
 
     if(j == 1) {
 

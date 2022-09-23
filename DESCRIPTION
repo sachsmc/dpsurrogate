@@ -1,8 +1,8 @@
 Package: dpsurrogate
 Type: Package
 Title: Methods and Simulation Studies for Flexible Evaluation of Surrogacy in Bayesian Adaptive Platform Studies
-Version: 0.4.0
-Date: 2022-09-22
+Version: 0.4.2
+Date: 2022-09-23
 Author: Michael C Sachs
 Maintainer: Michael C Sachs <sachsmc@gmail.com>
 Description: Code for analysis and simulations for the accompanying manuscript 

@@ -12,7 +12,7 @@ niter <- 50
 if(effect == "nonlinearskew") {
 
   library(sn)
-  idat <- generate_data(effect, Zeff, Ueff,
+  idat <- generate_data("nonlinear", Zeff, Ueff,
                         Zgen = function(n) rsn(n, xi = 0, omega = 1, alpha = 1),
                         Sgen = function(n) rsn(n, xi = 0, omega = 1.5, alpha = 1))
 

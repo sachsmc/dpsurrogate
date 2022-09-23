@@ -21,11 +21,11 @@ run_one_simple_analysis <- function(boo, niter = 50) {
 
     test_data <- list(J = ncol(Xmat),
                       N = nrow(Xmat),
-                      sy = cbind(SS, logYY),
+                      s = SS,
+                      y = logYY,
                       X = Xmat,
                       Z = c(rep(0, 80 - 64), boo$rdat$trtZ),
-                      prior_sig = Sig,
-                      omega = c(2,2))
+                      prior_sig = Sig)
 
 
       tmod <- jags.model(system.file("normalmodel.bug", package = "dpsurrogate"),
@@ -66,11 +66,11 @@ run_one_loo_simple_analysis <- function(boo, lout, niter = 50, jags.state = NULL
 
   test_data <- list(J = ncol(Xmat),
                     N = nrow(Xmat),
-                    sy = cbind(SS, logYY),
+                    s = SS,
+                    y = logYY,
                     X = Xmat,
                     Z = c(rep(0, 80 - 64), boo$rdat$trtZ),
-                    prior_sig = Sig,
-                    omega = c(2,2))
+                    prior_sig = Sig)
 
 
   if(!is.null(jags.state)) {

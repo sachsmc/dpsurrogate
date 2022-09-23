@@ -21,15 +21,18 @@ model {
   alpha_0y ~ dnorm(0, .01)
   alpha_1y ~ dnorm(0, .01)
 
-  muu[,1] <- X %*% beta_s
-  muu[,2] <- X %*% beta_y
+  mus <- X %*% beta_s
+  muy <- X %*% beta_y
 
   for(i in 1:N){
 
-    sy[i, 1:2] ~ dmnorm(muu[i,1:2], tau)
+    y[i] ~ dnorm(muy[i] + theta * (s[i] - mus[i]), tauy)
+    s[i] ~ dnorm(mus[i], taus)
 
   }
 
-  tau ~ dscaled.wishart(omega, 4)
+  theta ~ dnorm(0.0, .001)
+  tauy ~ dgamma(1,1)
+  taus ~ dgamma(1,1)
 
 }

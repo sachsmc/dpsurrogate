@@ -3,7 +3,7 @@ library(ggplot2)
 library(patchwork)
 library(dpsurrogate)
 
-res1 <- readRDS("tests/sim-res/runout-twotrt-0.0-0.0_01.rds")
+res1 <- readRDS("tests/sim-res/runout-inter-0.0-0.0_00.rds")
 res2 <- readRDS("tests/sim-res/runout-manybiom-0.0-0.0_00.rds")
 
 name1 <- "Good for two treatments"
