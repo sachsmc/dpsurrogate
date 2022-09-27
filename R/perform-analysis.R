@@ -141,7 +141,7 @@ run_one_analysis <- function(boo, niter = 50) {
     upriors <- update_priors(dp, boo)
 
     prior.mu <- rbind(matrix(0, nrow = 16, ncol = 2), upriors$prior.mu)
-    prior.sig0 <- as.array(c(lapply(1:16, function(i) matrix(c(2, .05, .05, 2), nrow = 2)),
+    prior.sig0 <- as.array(c(lapply(1:16, function(i) matrix(c(10, .05, .05, 10), nrow = 2)),
                              upriors$prior.sig))
     prior.sig <- array(NA, dim = c(2,2,80))
     for(i in 1:80){
@@ -251,7 +251,7 @@ run_one_loo <- function(boo, lout, niter = 50, jags.state = NULL) {
     upriors <- update_priors(dp, boo)
 
     prior.mu <- rbind(matrix(0, nrow = 16, ncol = 2), upriors$prior.mu)
-    prior.sig0 <- as.array(c(lapply(1:16, function(i) matrix(c(2, .05, .05, 2), nrow = 2)),
+    prior.sig0 <- as.array(c(lapply(1:16, function(i) matrix(c(10, .05, .05, 10), nrow = 2)),
                              upriors$prior.sig))
     prior.sig <- array(NA, dim = c(2,2,80))
     for(i in 1:80){
@@ -372,7 +372,7 @@ run_one_null <- function(boo, niter = 50) {
     upriors <- update_priors(dp, boo)
 
     prior.mu <- c(matrix(0, nrow = 16, ncol = 1), upriors$prior.mu)
-    prior.sig <- c(rep(2, 16), unlist(upriors$prior.sig))
+    prior.sig <- c(rep(10, 16), unlist(upriors$prior.sig))
 
     test_data <- list(J = ncol(Xmat),
                       N = nrow(Xmat),
@@ -448,7 +448,23 @@ run_one_loo_null <- function(boo, lout, niter = 50, jags.state = NULL) {
   cur <- init
 
   dmat <- cbind(as.matrix(cur[, c("yeff")]), boo$rdat$trtZ)
-  dp <- DirichletProcessMvnormal(dmat, alphaPriors = c(2, 4), numInitialClusters = length(initclus$size))
+
+  mu0hat <- c(sum(dmat[, 1] * boo$rdat$ngrp) / sum(boo$rdat$ngrp),
+              mean(boo$rdat$trtZ))
+
+  v0hat <- c(sum((dmat[, 1] - mu0hat[1])^2 * boo$rdat$ngrp) /
+               sum(boo$rdat$ngrp), var(boo$rdat$trtZ))
+
+  lambase <- diag(1 / v0hat)
+
+  basepriors <- list(mu0 = mu0hat,
+                     Lambda = lambase,
+                     kappa0 = 1 / 64,
+                     nu = ncol(dmat))
+
+  dp <- DirichletProcessMvnormal(dmat, alphaPriors = c(1, 2),
+                                 g0Priors = basepriors,
+                                 numInitialClusters = length(initclus$size))
   dp <- Fit(dp, 200, progressBar = FALSE)
   dp <- UpdateAlpha(dp)
 
@@ -460,7 +476,7 @@ run_one_loo_null <- function(boo, lout, niter = 50, jags.state = NULL) {
 
     upriors <- update_priors(dp, boo)
     prior.mu <- c(matrix(0, nrow = 16, ncol = 1), upriors$prior.mu)
-    prior.sig <- c(rep(2, 16), unlist(upriors$prior.sig))
+    prior.sig <- c(rep(10, 16), unlist(upriors$prior.sig))
 
     test_data <- list(J = ncol(Xmat),
                       N = nrow(Xmat),
@@ -491,12 +507,14 @@ run_one_loo_null <- function(boo, lout, niter = 50, jags.state = NULL) {
       tmod <- jags.model(system.file("regmodel-null.bug", package = "dpsurrogate"),
                          test_data, inits = tmod$state(), n.adapt = 0, quiet = TRUE)
       tmp <- adapt(tmod, n.iter = 0, end.adaptation = TRUE)
-      tsam <- jags.samples(tmod, c("beta_y"), n.iter = 10)
+      tsam <- jags.samples(tmod, c("beta_y"), n.iter = 50)
 
 
     }
 
     res.y[j, ] <- as.matrix(tsam$beta_y[-c(1:16), dim(tsam$beta_y)[2], 1])
+
+    res.y[j, lout] <- .5 * res.y[j, lout] + .5 * mean(tsam$beta_y[-c(1:16), , 1][lout,])
 
     newdmat <- as.matrix(cbind(
       yeff = res.y[j, ]))

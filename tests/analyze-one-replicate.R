@@ -4,7 +4,7 @@ library(patchwork)
 library(dpsurrogate)
 
 res1 <- readRDS("tests/sim-res/runout-inter-0.0-0.0_00.rds")
-res2 <- readRDS("tests/sim-res/runout-manybiom-0.0-0.0_00.rds")
+res2 <- readRDS("tests/sim-res/runout-simplestrong-0.0-0.0_07.rds")
 
 name1 <- "Good for two treatments"
 name2 <- "Differential by biomarker"
