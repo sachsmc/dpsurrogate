@@ -3,11 +3,11 @@ library(ggplot2)
 library(patchwork)
 library(dpsurrogate)
 
-res1 <- readRDS("tests/sim-res/runout-inter-0.0-0.0_00.rds")
-res2 <- readRDS("tests/sim-res/runout-simplestrong-0.0-0.0_07.rds")
+res1 <- readRDS("tests/sim-res/runout-linear-0.0-0.0_64.rds")
+res2 <- readRDS("tests/sim-res/runout-nonlinear-0.0-0.0_52.rds")
 
-name1 <- "Good for two treatments"
-name2 <- "Differential by biomarker"
+name1 <- "Linear"
+name2 <- "Nonlinear"
 
 res1$trueeffects$group <- as.numeric(factor(res1$trueeffects$J))
 
@@ -111,7 +111,7 @@ p32 <- ggplot(ests2, aes(x = seff, y = yeff, xend = seff, yend = simple)) +
 p1 + p12 +  p3 + p32 + p2 + p22 +plot_layout(ncol = 2)
 
 
-ggsave("preds-median-twotrt.png", width = 7.5, height = 9.75)
+ggsave("preds-median-linnonlin.pdf", width = 7.5, height = 9.75)
 
 
 cheez <-  merge(res1$leaveouts, res1$trueeffects, by.x = "leftout", by.y = "group")
@@ -138,17 +138,17 @@ q2 <- data.frame(err = c(cheez2$D, cheez2$D0, cheez2$Ds),
   xlim(c(0,10)) + ggtitle(name2)
 
 q1 + q2 + plot_layout(ncol = 1, guides = "collect")
-ggsave("D-density-twotrt.png", width = 6.5, height = 6.5)
+ggsave("D-density-linnonlin.pdf", width = 6.5, height = 6.5)
 
-cheez2$trt <- sapply(strsplit(cheez2$J, ":"), "[", 2)
-cheez2$genome <- sapply(strsplit(cheez2$J, ":"), "[", 1)
+cheez$trt <- sapply(strsplit(cheez$J, ":"), "[", 2)
+cheez$genome <- sapply(strsplit(cheez$J, ":"), "[", 1)
 
-ggplot(data.frame(D = c(cheez2$D, cheez2$Ds, cheez2$D0),
-                  model = rep(c("DPM", "Simple", "Null"), each = nrow(cheez2)),
-                  treatment = c(cheez2$trt, cheez2$trt, cheez2$trt)),
+ggplot(data.frame(D = c(cheez$D, cheez$Ds, cheez$D0),
+                  model = rep(c("DPM", "Simple", "Null"), each = nrow(cheez)),
+                  treatment = c(cheez$trt, cheez$trt, cheez$trt)),
        aes(x = D, y = treatment, color = model)) + geom_boxplot() + theme_bw()
 
-ggsave("onetrt-box.png", width = 5.25, height = 4.5)
+ggsave("onetrt-box.pdf", width = 5.25, height = 4.5)
 
 
 tmp3 <- merge(res1$alleffects, res1$trueeffects, by = "group")
@@ -170,9 +170,9 @@ ggplot(ests, aes(x = seff, y = yeff, xend = seff, yend = dpsur)) +
 
 ggplot( rbind(cbind(cheez, setting = name1),
               cbind(cheez2, setting = name2)),
-             aes(x = D, color = factor(cluster))) + geom_density() +
+             aes(x = D, color = factor(as.numeric(cluster)))) + geom_density() +
   theme_bw() + xlab("Absolute error") + facet_wrap(~ setting, ncol = 1) +
   ggtitle("by cluster") + guides(color = "none") + xlim(c(0,10))
 
-ggsave("d-dens-by-cluster-twotrt.png", width = 5.25, height = 4.25)
+ggsave("d-dens-by-cluster-inter.pdf", width = 5.25, height = 4.25)
 

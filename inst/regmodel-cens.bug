@@ -16,7 +16,7 @@ model {
 
   for(i in OO) {
     s[i] ~ dnorm(mu_s[i], tau_s)
-    y[i] ~ dnorm(mu_y[i], tau_y)
+    y[i] ~ dnorm(mu_y[i] + theta * (s[i] - mu_s[i]), tau_y)
   }
 
   for(i in JJ){
@@ -25,8 +25,8 @@ model {
 
     t[i] <- exp(y[i])
     is.censored[i] ~ dinterval(t[i],t.cen[i])
-    y[i] ~ dnorm(mu_y[i], tau_y)
-    t.cen[i] ~ dlnorm(mu_y[i], tau_y2)
+    y[i] ~ dnorm(mu_y[i] + theta * (s[i] - mu_s[i]), tau_y)
+    t.cen[i] ~ dlnorm(mu_y[i] + theta * (s[i] - mu_s[i]), tau_y2)
 
   }
 
@@ -39,5 +39,7 @@ model {
   sigma_y ~ dgamma(1, 1)
   sigma_y2 ~ dgamma(1, 1)
   sigma_s ~ dgamma(1, 1)
+
+  theta ~ dnorm(0.0, .001)
 
 }

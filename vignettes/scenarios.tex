@@ -1,0 +1,367 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Summary of data generation scenarios},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Summary of data generation scenarios}
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(dpsurrogate)}
+\FunctionTok{library}\NormalTok{(splines)}
+\FunctionTok{library}\NormalTok{(knitr)}
+
+\NormalTok{summary\_scenario }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(idat) \{}
+  \FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{))}
+  \FunctionTok{plot}\NormalTok{(yeff }\SpecialCharTok{\textasciitilde{}}\NormalTok{ seff, }\AttributeTok{data =}\NormalTok{ idat}\SpecialCharTok{$}\NormalTok{rdat)}
+  \FunctionTok{plot}\NormalTok{(yeff }\SpecialCharTok{\textasciitilde{}}\NormalTok{ trtZ, }\AttributeTok{data =}\NormalTok{ idat}\SpecialCharTok{$}\NormalTok{rdat)}
+  
+  \DocumentationTok{\#\# partial residuals}
+  
+\NormalTok{  fit.z }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(yeff }\SpecialCharTok{\textasciitilde{}} \FunctionTok{bs}\NormalTok{(trtZ, }\AttributeTok{df =} \DecValTok{3}\NormalTok{), }\AttributeTok{data =}\NormalTok{ idat}\SpecialCharTok{$}\NormalTok{rdat)}
+\NormalTok{  fit.s }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(yeff }\SpecialCharTok{\textasciitilde{}} \FunctionTok{bs}\NormalTok{(seff, }\AttributeTok{df =} \DecValTok{3}\NormalTok{), }\AttributeTok{data =}\NormalTok{ idat}\SpecialCharTok{$}\NormalTok{rdat)}
+  
+  \FunctionTok{plot}\NormalTok{(}\FunctionTok{resid}\NormalTok{(fit.z) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ idat}\SpecialCharTok{$}\NormalTok{rdat}\SpecialCharTok{$}\NormalTok{seff, }\AttributeTok{ylab =} \StringTok{"p resid | Z"}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"seff"}\NormalTok{)}
+  \FunctionTok{plot}\NormalTok{(}\FunctionTok{resid}\NormalTok{(fit.s) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ idat}\SpecialCharTok{$}\NormalTok{rdat}\SpecialCharTok{$}\NormalTok{trtZ, }\AttributeTok{ylab =} \StringTok{"p resid | seff"}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"trtZ"}\NormalTok{)}
+  
+  \FunctionTok{summary}\NormalTok{(}\FunctionTok{lm}\NormalTok{(yeff }\SpecialCharTok{\textasciitilde{}}\NormalTok{ seff }\SpecialCharTok{+}\NormalTok{ trtZ, }\AttributeTok{data =}\NormalTok{ idat}\SpecialCharTok{$}\NormalTok{rdat))}
+  
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+We start by generating \(\nu_j, Z_j, U_j\) for \(j = 1, \ldots, 64\) all
+from independent standard normal distributions. Recall that \(\nu_j\)
+represents the treatment effect on the potential surrogate in group
+\(i\), and \(Z_j\) is an observed treatment-level covariate, and \(U_i\)
+is an unobserved treatment-level covariate. We consider the following
+scenarios for generation of \(\mu_j\), the treatment effect on the
+clinical outcome.
+
+\begin{itemize}
+\tightlist
+\item
+  Nonlinear (nonlinear):
+  \(\mu_j = -1 + f(\nu_j) + c_z |Z_j| + c_u U_j\), where \(f\) is a
+  linear spline basis with knots at \(-1, 0, 1\) and coefficients chosen
+  so that the trend is monotonically increasing.
+\item
+  Nonlinear skew (nonlinearskew), same as above but \(\nu_j\) are
+  sampled from a skew-normal distribution.
+\item
+  Linear (linear): \(\mu_j = -1 + 1* \nu_j + c_z |Z_j| + c_u U_j\).
+\item
+  Simple (simple): \(\mu_j = -1 + 1* \nu_j + c_z Z_j + c_u U_j\).
+\item
+  Simple strong (simplestrong):
+  \(\mu_j = -1 + 2* \nu_j + c_z Z_j + c_u U_j\).
+\item
+  Null (null): \(\mu_j = -1 + c_z |Z_j| + c_u U\).
+\item
+  Interaction (inter): \(\mu_j = 1\{Z_j < 0\} * \nu_j + c_u U_j\), where
+  \(1\{\cdot\}\) is the - r function.
+\item
+  Hidden interaction (interhide):
+  \(\mu_j = 1\{U_j < 0\} * \nu_j + c_z Z_j\).
+\item
+  Surrogate value for only 1 treatment (onetrt):
+  \(\mu_j = 1\{j\in R_a\} * \nu_j + c_z Z_j + c_u U_j\) where \(R_a\) is
+  the set of indices such that the active treatment is treatment A.
+\item
+  Surrogate value for 2 treatments (twotrt):
+  \(\mu_j = 1\{j\in (R_a, R_b)\} * (\nu_j - \min_j(\nu_j)) + c_z Z_j + c_u U_j\)
+  where \(R_a, R_b\) are the sets of indices such that the active
+  treatment is treatment A and B, respectively. Additionally, the mean
+  of \(Z_j\) is changed to vary based on the treatment group (with
+  different means in each of the 4 groups).
+\item
+  Surrogate value for multiple biomarkers (manybiom): The biomarker
+  groups are grouped into 3 categories \(B^*_j \in \{1, 2, 3\}\) of size
+  20, 28, 16, respectively. Then \(Z_j \sim N(B^*_j - 1, 0.5^2)\) and
+  \(\mu_j = 0.25 \cdot (B^*_j - 3) \cdot (\nu_j - \min_j(\nu_j)) + c_z Z_j + c_u U_j\).
+  In this setting, the three biomarker groups have differential
+  surrogate value none, moderate, and strong.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+
+
+\NormalTok{settings }\OtherTok{\textless{}{-}} \FunctionTok{rbind}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{scen =} \FunctionTok{c}\NormalTok{(}\StringTok{"nonlinear"}\NormalTok{, }\StringTok{"nonlinearskew"}\NormalTok{, }\StringTok{"linear"}\NormalTok{, }\StringTok{"simple"}\NormalTok{, }\StringTok{"simplestrong"}\NormalTok{,}
+                                      \StringTok{"null"}\NormalTok{, }\StringTok{"inter"}\NormalTok{, }\StringTok{"interhide"}\NormalTok{,}
+                    \StringTok{"onetrt"}\NormalTok{, }\StringTok{"twotrt"}\NormalTok{, }\StringTok{"manybiom"}\NormalTok{),}
+           \AttributeTok{num =} \DecValTok{99}\NormalTok{, }\AttributeTok{p1 =} \DecValTok{0}\NormalTok{, }\AttributeTok{p2 =} \DecValTok{0}\NormalTok{),}
+      \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{scen =} \FunctionTok{c}\NormalTok{(}\StringTok{"nonlinear"}\NormalTok{, }\StringTok{"linear"}\NormalTok{, }\StringTok{"simple"}\NormalTok{),}
+                 \AttributeTok{num =} \DecValTok{99}\NormalTok{, }\AttributeTok{p1 =} \FloatTok{0.3}\NormalTok{, }\AttributeTok{p2 =} \DecValTok{0}\NormalTok{),}
+      \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{scen =} \FunctionTok{c}\NormalTok{(}\StringTok{"nonlinear"}\NormalTok{, }\StringTok{"linear"}\NormalTok{, }\StringTok{"simple"}\NormalTok{, }\StringTok{"manybiom"}\NormalTok{),}
+                 \AttributeTok{num =} \DecValTok{99}\NormalTok{, }\AttributeTok{p1 =} \FloatTok{0.3}\NormalTok{, }\AttributeTok{p2 =} \FloatTok{0.3}\NormalTok{),}
+      \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{scen =} \FunctionTok{c}\NormalTok{(}\StringTok{"inter"}\NormalTok{, }\StringTok{"onetrt"}\NormalTok{),}
+                 \AttributeTok{num =} \DecValTok{99}\NormalTok{, }\AttributeTok{p1 =} \DecValTok{0}\NormalTok{, }\AttributeTok{p2 =} \FloatTok{0.3}\NormalTok{),}
+      \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{scen =} \FunctionTok{c}\NormalTok{(}\StringTok{"interhide"}\NormalTok{, }\StringTok{"twotrt"}\NormalTok{, }\StringTok{"manybiom"}\NormalTok{),}
+                 \AttributeTok{num =} \DecValTok{99}\NormalTok{, }\AttributeTok{p1 =} \FloatTok{0.3}\NormalTok{, }\AttributeTok{p2 =} \DecValTok{0}\NormalTok{))}
+
+\NormalTok{settings}\SpecialCharTok{$}\NormalTok{fname }\OtherTok{\textless{}{-}} \FunctionTok{gsub}\NormalTok{(}\StringTok{"."}\NormalTok{, }\StringTok{""}\NormalTok{, }\FunctionTok{make.names}\NormalTok{(settings}\SpecialCharTok{$}\NormalTok{scen, }\AttributeTok{unique =} \ConstantTok{TRUE}\NormalTok{), }\AttributeTok{fixed =} \ConstantTok{TRUE}\NormalTok{)}
+
+
+\ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(settings))\{}
+\NormalTok{  dscen }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{(settings}\SpecialCharTok{$}\NormalTok{scen[i] }\SpecialCharTok{==} \StringTok{"nonlinearskew"}\NormalTok{) }\StringTok{"nonlinear"} \ControlFlowTok{else}\NormalTok{ settings}\SpecialCharTok{$}\NormalTok{scen[i]}
+\NormalTok{  idat }\OtherTok{\textless{}{-}} \FunctionTok{generate\_data}\NormalTok{(}\AttributeTok{effect =}\NormalTok{ dscen, }\AttributeTok{Zeffect =}\NormalTok{ settings}\SpecialCharTok{$}\NormalTok{p1[i], }
+                        \AttributeTok{Ueffect =}\NormalTok{ settings}\SpecialCharTok{$}\NormalTok{p2[i])}
+\NormalTok{  header }\OtherTok{\textless{}{-}} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{subsection\{Setting: \%s, $c\_z = \%.1f, c\_u = \%.1f$\} }\SpecialCharTok{\textbackslash{}n\textbackslash{}n}\StringTok{"}\NormalTok{, }
+\NormalTok{              settings}\SpecialCharTok{$}\NormalTok{scen[i], settings}\SpecialCharTok{$}\NormalTok{p1[i], }
+\NormalTok{              settings}\SpecialCharTok{$}\NormalTok{p2[i])}
+  \FunctionTok{cat}\NormalTok{(header)}
+  \FunctionTok{summary\_scenario}\NormalTok{(idat)}
+  
+\NormalTok{\}}
+\CommentTok{\#\textgreater{} \textbackslash{}subsection\{Setting: nonlinear, $c\_z = 0.0, c\_u = 0.0$\}}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{scenarios_files/figure-latex/inter-1.pdf}
+
+\begin{verbatim}
+#> \subsection{Setting: nonlinearskew, $c_z = 0.0, c_u = 0.0$}
+\end{verbatim}
+
+\includegraphics{scenarios_files/figure-latex/inter-2.pdf}
+
+\begin{verbatim}
+#> \subsection{Setting: linear, $c_z = 0.0, c_u = 0.0$}
+#> Warning in summary.lm(lm(yeff ~ seff + trtZ, data = idat$rdat)): essentially perfect fit: summary may be
+#> unreliable
+\end{verbatim}
+
+\includegraphics{scenarios_files/figure-latex/inter-3.pdf}
+
+\begin{verbatim}
+#> \subsection{Setting: simple, $c_z = 0.0, c_u = 0.0$}
+#> Warning in summary.lm(lm(yeff ~ seff + trtZ, data = idat$rdat)): essentially perfect fit: summary may be
+#> unreliable
+\end{verbatim}
+
+\includegraphics{scenarios_files/figure-latex/inter-4.pdf}
+
+\begin{verbatim}
+#> \subsection{Setting: simplestrong, $c_z = 0.0, c_u = 0.0$}
+#> Warning in summary.lm(lm(yeff ~ seff + trtZ, data = idat$rdat)): essentially perfect fit: summary may be
+#> unreliable
+\end{verbatim}
+
+\includegraphics{scenarios_files/figure-latex/inter-5.pdf}
+
+\begin{verbatim}
+#> \subsection{Setting: null, $c_z = 0.0, c_u = 0.0$}
+\end{verbatim}
+
+\includegraphics{scenarios_files/figure-latex/inter-6.pdf}
+
+\begin{verbatim}
+#> \subsection{Setting: inter, $c_z = 0.0, c_u = 0.0$}
+\end{verbatim}
+
+\includegraphics{scenarios_files/figure-latex/inter-7.pdf}
+
+\begin{verbatim}
+#> \subsection{Setting: interhide, $c_z = 0.0, c_u = 0.0$}
+\end{verbatim}
+
+\includegraphics{scenarios_files/figure-latex/inter-8.pdf}
+
+\begin{verbatim}
+#> \subsection{Setting: onetrt, $c_z = 0.0, c_u = 0.0$}
+\end{verbatim}
+
+\includegraphics{scenarios_files/figure-latex/inter-9.pdf}
+
+\begin{verbatim}
+#> \subsection{Setting: twotrt, $c_z = 0.0, c_u = 0.0$}
+\end{verbatim}
+
+\includegraphics{scenarios_files/figure-latex/inter-10.pdf}
+
+\begin{verbatim}
+#> \subsection{Setting: manybiom, $c_z = 0.0, c_u = 0.0$}
+\end{verbatim}
+
+\includegraphics{scenarios_files/figure-latex/inter-11.pdf}
+
+\begin{verbatim}
+#> \subsection{Setting: nonlinear, $c_z = 0.3, c_u = 0.0$}
+\end{verbatim}
+
+\includegraphics{scenarios_files/figure-latex/inter-12.pdf}
+
+\begin{verbatim}
+#> \subsection{Setting: linear, $c_z = 0.3, c_u = 0.0$}
+\end{verbatim}
+
+\includegraphics{scenarios_files/figure-latex/inter-13.pdf}
+
+\begin{verbatim}
+#> \subsection{Setting: simple, $c_z = 0.3, c_u = 0.0$}
+#> Warning in summary.lm(lm(yeff ~ seff + trtZ, data = idat$rdat)): essentially perfect fit: summary may be
+#> unreliable
+\end{verbatim}
+
+\includegraphics{scenarios_files/figure-latex/inter-14.pdf}
+
+\begin{verbatim}
+#> \subsection{Setting: nonlinear, $c_z = 0.3, c_u = 0.3$}
+\end{verbatim}
+
+\includegraphics{scenarios_files/figure-latex/inter-15.pdf}
+
+\begin{verbatim}
+#> \subsection{Setting: linear, $c_z = 0.3, c_u = 0.3$}
+\end{verbatim}
+
+\includegraphics{scenarios_files/figure-latex/inter-16.pdf}
+
+\begin{verbatim}
+#> \subsection{Setting: simple, $c_z = 0.3, c_u = 0.3$}
+\end{verbatim}
+
+\includegraphics{scenarios_files/figure-latex/inter-17.pdf}
+
+\begin{verbatim}
+#> \subsection{Setting: manybiom, $c_z = 0.3, c_u = 0.3$}
+\end{verbatim}
+
+\includegraphics{scenarios_files/figure-latex/inter-18.pdf}
+
+\begin{verbatim}
+#> \subsection{Setting: inter, $c_z = 0.0, c_u = 0.3$}
+\end{verbatim}
+
+\includegraphics{scenarios_files/figure-latex/inter-19.pdf}
+
+\begin{verbatim}
+#> \subsection{Setting: onetrt, $c_z = 0.0, c_u = 0.3$}
+\end{verbatim}
+
+\includegraphics{scenarios_files/figure-latex/inter-20.pdf}
+
+\begin{verbatim}
+#> \subsection{Setting: interhide, $c_z = 0.3, c_u = 0.0$}
+\end{verbatim}
+
+\includegraphics{scenarios_files/figure-latex/inter-21.pdf}
+
+\begin{verbatim}
+#> \subsection{Setting: twotrt, $c_z = 0.3, c_u = 0.0$}
+\end{verbatim}
+
+\includegraphics{scenarios_files/figure-latex/inter-22.pdf}
+
+\begin{verbatim}
+#> \subsection{Setting: manybiom, $c_z = 0.3, c_u = 0.0$}
+\end{verbatim}
+
+\includegraphics{scenarios_files/figure-latex/inter-23.pdf}
+
+\end{document}

@@ -70,7 +70,7 @@ for(j in  1:niter){
   upriors <- update_priors(dp, boo)
 
   prior.mu <- rbind(matrix(0, nrow = 16, ncol = 2), upriors$prior.mu)
-  prior.sig0 <- as.array(c(lapply(1:16, function(i) matrix(c(2, .05, .05, 2), nrow = 2)),
+  prior.sig0 <- as.array(c(lapply(1:16, function(i) matrix(c(10, .05, .05, 10), nrow = 2)),
                            upriors$prior.sig))
   prior.sig <- array(NA, dim = c(2,2,80))
   for(i in 1:80){
@@ -182,11 +182,11 @@ ggplot() +
   xlab(expression(hat(nu))) + ylab(expression(hat(mu))) +
   theme_bw() +
   geom_rug(data = est.effs[9,], aes(x = seff)) +
-#  geom_linerange(data = cbind(est.effs[9,]), aes(x = seff, ymin = yeff - .926, ymax = yeff + .926)) +
+  geom_linerange(data = cbind(est.effs[9,]), aes(x = seff, ymin = yeff - 1.62, ymax = yeff + 1.62)) +
   scale_color_manual("cluster", values = c("salmon", "slateblue")) +
   scale_shape_manual("", values = c(19, 1))
 
-ggsave("example.png", width = 5.25, height = 3.5)
+ggsave("example.pdf", width = 5.25, height = 3.5)
 
 
 ## leave one outs over the 63 observed
@@ -251,7 +251,7 @@ for(j in  1:niter){
   upriors <- update_priors(dp, boo)
 
   prior.mu <- rbind(matrix(0, nrow = 16, ncol = 2), upriors$prior.mu)
-  prior.sig0 <- as.array(c(lapply(1:16, function(i) matrix(c(2, .05, .05, 2), nrow = 2)),
+  prior.sig0 <- as.array(c(lapply(1:16, function(i) matrix(c(10, .05, .05, 10), nrow = 2)),
                            upriors$prior.sig))
   prior.sig <- array(NA, dim = c(2,2,79))
   for(i in 1:79){
@@ -349,7 +349,7 @@ resWho <- clusterApply(cl, 1:63, function(i) {
   cens_loo(i)
 })
 
-
+saveRDS(resWho, file = "reswho.rds")
 
 ldat2 <- subset(ldat, J != "--+-:ARSi")
 ldat2$J <- factor(ldat2$J)
